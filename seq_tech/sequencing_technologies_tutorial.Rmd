@@ -1,53 +1,68 @@
----
-title: "Tutorial: Sequencing Technologies"
-output: html_notebook
----
-
 # Initial setup: Work environment and Data
 
+The starter notebook contains instructions for setting up your conda
+environment. Please follow these instructions, then continue using
+the notebook to write the commands used here and take notes for the exercises.
+You can also download a copy from [here](sequencing_technologies_tutorial.Rmd) for your own computer.
+
+The notebook that will serve as both a rudimentary pipeline and final (reproducible) report.
+
+![](img/notebooks.png)
+
+
+If you have not done so already, you need to first install conda.
+See instructions [here](../unix/conda_install.html)
+
+## Directory and data setup
+We will be working in RStudio and primarely writing the commands in this notebook. However, the first commands in this section is easier if you run from the terminal. 
+
+Please create a directory for this tutorial in your home directory and inside there
+copy the starter notebook from my directory. To do this run the following commands in the terminal after logging on to the server.
+
+```bash
+cd
+mkdir NGS_Tutorial
+cp /home/sandra/NGS_Tutorial/sequencing_technologies_tutorial.Rmd NGS_Tutorial/
+cd NGS_Tutorial
+```
+
+Now fetch a copy of the data we will be using:
+
+```bash
+cp -r /home/sandra/NGS_Tutorial/data .
+```
+
+To nicely see the contents of (small) directories, you can use
+the `tree` program, but you need to install it first (`conda install tree`)
+
+```bash
+tree data
+```
+
+You can also run `ls *` (which works on any system)
+
+To make sure this data is protected from accidental writes, 
+remove the write permission (`-w`) for anyone on the server (`ugo`) 
+on it by running:
+
+```bash
+find data -type f -print0 | xargs -0 chmod ugo-w
+```
+
+Then create results directory
+
+```bash
+mkdir results
+```
+
+
+## Work environment
 It's standard practice to create a new conda environment for each project.
 This is because each project may require a number of different software packages,
 with certain version. Even if these requirements are very similar between the projects,
 even small differences may topple the house of cards that is the software ecosystem.
 This is officially referred to as ["dependency hell"](https://en.wikipedia.org/wiki/Dependency_hell)
 an can be traumatizing.
-
-Please paste the commands between ``` marks below:
-
-Conda can fetch packages from many different sources (aka "channels")
-Let's add the Bioconda channel, as well as the general-purpose conda-forge.
-("defaults" is given first to give it top priority when searching for packages)
-
-```
-conda config --add channels defaults
-conda config --add channels bioconda
-conda config --add channels conda-forge
-```
-
-Create and activate a new environment for this exercise. 
-The first command below will ask for confirmation. Just press `y` and [Enter]
-
-```
-conda create --name sequencing
-conda activate sequencing
-```
-
-You should see `(sequencing)` to the left of your command prompt.
-If you don't, try running 
-
-```
-source ~/.bashrc
-```
-
-If that still doesn't work, please ask for help so we make sure we all start from the same place.
-
-Now install the software needed for this exercise.
-This step will also ask for confirmation. 
-Later on / in real life, it's good to to examine what changes are made when installing new packages.
-
-```
-conda install samtools bowtie2 breseq abyss bcftools wgsim emboss tree
-```
 
 Run the code chunk below to enable running conda commands from this notebook.
 For future reference, this functionality is achieved with the built-in 
@@ -57,8 +72,43 @@ For future reference, this functionality is achieved with the built-in
 knitr::opts_chunk$set(engine.opts = "-i")
 ```
 
+Conda can fetch packages from many different sources (aka "channels")
+Let's add the Bioconda channel, as well as the general-purpose conda-forge.
+("defaults" is given first to give it top priority when searching for packages)
+
 Ignore the errors about " Inappropriate ioctl for device" 
 and "no job control in this shell". They're a harmless consequence of this.
 
+```{bash, eval=FALSE}
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
 
-# Exercise 1
+Create and activate a new environment for this exercise. 
+The conda create command create new environments, the option --name specifies the name of your new environment and the option -y lets conda know that you answer yes to all prompts. Without -y you will have to manually type in yes when prompted.
+The command conda activate activates the environment within the current code chunk **and only the current code chunk**. Which means that within every code chunk that we want to use our environment we need to first run conda activate <environment_name>. 
+
+```{bash, eval=FALSE}
+conda create --name sequencing -y
+conda activate sequencing
+```
+If that still doesn't work, please ask for help so we make sure we all start from the same place.
+
+Now install the software needed for this exercise. We want to install the software on to our new environment so we first activate the environment with conda activate.
+The command conda install will install the packages that you specify to it. You can specify multiple packages at a time by separating them with spaces. This step will also ask for confirmation if we do not specify the -y option. 
+Later on / in real life, it's good to to examine what changes are made when installing new packages. You can easily view all the packages installed in an environment by running conda list once activated. 
+
+**Make sure you activated the `sequencing` environment!**
+
+```{bash, eval=FALSE}
+conda activate sequencing
+conda install samtools bowtie2 breseq abyss bcftools wgsim emboss tree -y
+```
+Lets inspect the packages that we just installed.
+```{bash, eval=FALSE}
+conda activate sequencing
+conda list
+```
+
+# Exercise 1: Alignment

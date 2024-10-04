@@ -11,57 +11,48 @@ output:
   pdf_document: default
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(eval = FALSE)
-```
+# Learning Outcomes
 
-# Tutorial Overview
-
-- Working with R notebooks to construct reproducible procedures
-- Running sequence processing software from the command line
-- Running sequence processing software from wrapper R libraries
-- Inspecting different output formats
+- Develop reproducible computational procedures using R notebooks.
+- Run sequence processing software via command-line interfaces.
+- Run wrapper R libraries to manage and execute sequence workflows.
+- Work with conda environments 
 
 
-# Prep
-
-We will be working in RStudio and writing the commands in a notebook.
-The notebook will serve as both a rudimentary pipeline and final (reproducible) report.
-
-![](img/notebooks.png)
-
-Please create a directory for this tutorial and inside there
-copy the starter notebook from my directory. So:
-
-```{bash}
-
-mkdir NGS_Tutorial
-cp /home/sandra/NGS_Tutorial/sequencing_technologies_tutorial.Rmd NGS_Tutorial/
-cd NGS_Tutorial
-
-```
+# Initial setup: Work environment and Data
 
 The starter notebook contains instructions for setting up your conda
-environment. Please follow these instructions, then continue using
+environment and R tidyvese package that is needed to interpret R notebooks. 
+Please follow these instructions, then continue using
 the notebook to write the commands used here and take notes for the exercises.
 You can also download a copy from [here](sequencing_technologies_tutorial.Rmd) for your own computer.
+
+The notebook that will serve as both a rudimentary pipeline and final (reproducible) report.
+
+![](img/notebooks.png)
 
 
 If you have not done so already, you need to first install conda.
 See instructions [here](../unix/conda_install.html)
 
-**Make sure you activated the `sequencing` environment!**
+## Directory and data setup
+We will be working in RStudio and primarely writing the commands in this notebook. However, the first commands in this section is easier if you run from the terminal. 
 
-> (Explained in class:) R notebooks can contain Linux terminal (bash) commands,
-> and you are encouraged to write the commands inside these "bash chunks".
-> The only thing to remember is that each chunk is run independently,
-> so each one starts from the same location as the notebook and without the conda environment activated.
+Please create a directory for this tutorial in your home directory and inside there
+copy the starter notebook from my directory. To do this run the following commands in the terminal after logging on to the server.
 
+```bash
+mkdir NGS_Tutorial
+cd NGS_Tutorial
+wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/seq_tech/sequencing_technologies_tutorial.Rmd 
+
+```
 
 Now fetch a copy of the data we will be using:
 
 ```bash
-cp -r /home/sandra/NGS_Tutorial/data .
+wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/seq_tech/data.zip 
+unzip data.zip
 ```
 
 To nicely see the contents of (small) directories, you can use
@@ -86,6 +77,70 @@ Then create results directory
 ```bash
 mkdir results
 ```
+
+
+## Work environment
+It's standard practice to create a new conda environment for each project.
+This is because each project may require a number of different software packages,
+with certain version. Even if these requirements are very similar between the projects,
+even small differences may topple the house of cards that is the software ecosystem.
+This is officially referred to as ["dependency hell"](https://en.wikipedia.org/wiki/Dependency_hell)
+an can be traumatizing.
+
+Run the code chunk below to enable running conda commands from this notebook.
+For future reference, this functionality is achieved with `knitr` package which is a part of 
+[knitr](https://yihui.org/knitr/options/) package.
+
+Before proceeding uNow go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by dafault knitr is missing.
+
+```{r}
+install.packages("tidyverse")
+```
+
+```{r, setup}
+knitr::opts_chunk$set(engine.opts = "-i")
+```
+
+Conda can fetch packages from many different sources (aka "channels")
+Let's add the Bioconda channel, as well as the general-purpose conda-forge.
+("defaults" is given first to give it top priority when searching for packages)
+
+Ignore the errors about " Inappropriate ioctl for device" 
+and "no job control in this shell". They're a harmless consequence of this.
+
+```{bash, eval=FALSE}
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
+
+Create and activate a new environment for this exercise. 
+The conda create command create new environments, the option --name specifies the name of your new environment and the option -y lets conda know that you answer yes to all prompts. Without -y you will have to manually type in yes when prompted.
+The command conda activate activates the environment within the current code chunk **and only the current code chunk**. Which means that within every code chunk that we want to use our environment we need to first run conda activate <environment_name>. 
+
+```{bash, eval=FALSE}
+conda create --name sequencing -y
+conda activate sequencing
+```
+If that still doesn't work, please ask for help so we make sure we all start from the same place.
+
+Now install the software needed for this exercise. We want to install the software on to our new environment so we first activate the environment with conda activate.
+The command conda install will install the packages that you specify to it. You can specify multiple packages at a time by separating them with spaces. This step will also ask for confirmation if we do not specify the -y option. 
+Later on / in real life, it's good to to examine what changes are made when installing new packages. You can easily view all the packages installed in an environment by running conda list once activated. 
+
+**Make sure you activated the `sequencing` environment!**
+
+```{bash, eval=FALSE}
+conda activate sequencing
+conda install samtools bowtie2 breseq abyss bcftools wgsim emboss tree -y
+```
+Lets inspect the packages that we just installed.
+```{bash, eval=FALSE}
+conda activate sequencing
+conda list
+```
+
+
 
 
 # Exercise 1: Alignment
@@ -115,7 +170,7 @@ These disappear when this webpage is created for some reason...
 Create a separate results dir
 
 ~~~bash
-```{bash}
+```{bash, eval=FALSE}
 mkdir results/exercise1
 ```
 ~~~
@@ -133,10 +188,8 @@ then build the bowtie index accordingly.
 > (Computation time: seconds)
 
 ~~~bash
-```{bash}
-
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 # Convert GFF3 > FASTA
 seqret -sequence data/ref/varicella.gb -feature -fformat gff3 -osformat fasta data/ref/varicella.fasta
@@ -167,9 +220,8 @@ The `\ ` symbol simply breaks the command across multiple lines for readability.
 > (Computation time: 1 min)
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 mkdir results/exercise1/alignment
 bowtie2 -x results/exercise1/bowtie_index/varicella \
@@ -189,9 +241,8 @@ using the `samtools` `view` command:
 > (Computation time: seconds)
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 samtools view -b -S -o results/exercise1/alignment/varicella.bam \
     results/exercise1/alignment/varicella.sam
@@ -208,9 +259,8 @@ This will create the file `varicella.sorted.bam`
 > (Computation time: seconds)
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 samtools sort results/exercise1/alignment/varicella.bam -o \
     results/exercise1/alignment/varicella.sorted.bam
@@ -226,9 +276,8 @@ index the sorted BAM file using `samtools` `index` command:
 > (Computation time: seconds)
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 samtools index results/exercise1/alignment/varicella.sorted.bam
 ```
@@ -246,9 +295,8 @@ and the Unix `awk` text processor to extract the values of interest:
 > (Computation time: 1s)
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 samtools depth results/exercise1/alignment/varicella.sorted.bam | awk '{sum+=$3} END {print "Average = ", sum/124884}'
 ```
 ~~~
@@ -262,13 +310,12 @@ Use the `samtools depth` command to extract coverage info
 and create a coverage map of the genome (position vs. coverage).
 Read the help for the tool with `samtools help depth`. 
 The output format is described at the end of the help.
-
-Answer:  
+ 
+Answer: 
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 samtools depth results/exercise1/alignment/varicella.sorted.bam > results/exercise1/alignment/coverage.tsv
 ```
 ~~~
@@ -276,7 +323,7 @@ samtools depth results/exercise1/alignment/varicella.sorted.bam > results/exerci
 Plot the result with R
 
 ~~~r
-```{r, message=F}
+```{r, message=F, eval=FALSE}
 library(tidyverse)
 
 alignment_coverage <-
@@ -309,9 +356,9 @@ This approach has the great advantage that we don't need to copy-paste all we di
 
 Create a sorted and indexed BAM file using the code below, which encapsulates steps 2-6 from Exercise 1 (except for the GFF > FASTA conversion).
 
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+~~~bash
+```{bash, eval=FALSE}
+conda activate sequencing
 
 DATA_DIR=data/seq
 RESULT_DIR=results/exercise2
@@ -346,6 +393,7 @@ samtools sort $ALIGNMENT_DIR/varicella_mut.bam -o \
 samtools index $ALIGNMENT_DIR/varicella_mut.sorted.bam
 
 ```
+~~~
 
 Tip: Run `ls -l data/*` to `tree data` if you forget what files you're working on.
 
@@ -361,9 +409,8 @@ Use the `samtools mpileup` command to identify genomic variants
 in the alignment. This will create the file `varicella_variants.bcf`
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 samtools mpileup -g -f data/ref/varicella.fasta results/exercise2/alignment/varicella_mut.sorted.bam > results/exercise2/varicella_variants.bcf
 ```
@@ -376,9 +423,8 @@ Use `bcftools call` command to convert the binary call format (BCF) to
  This will create the file `varicella_variants.vcf`
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 bcftools call -c -v results/exercise2/varicella_variants.bcf > results/exercise2/varicella_variants.vcf
 ```
@@ -396,13 +442,13 @@ VCF (and BCF) contain only the information needed for some downstream tasks.
 
 This is an interactive command so **run it in the terminal**:
 
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 samtools tview results/exercise2/alignment/varicella_mut.sorted.bam \
     data/ref/varicella.fasta -p NC_001348:77985 
 ```
+
 
 ## Questions
 
@@ -410,7 +456,7 @@ samtools tview results/exercise2/alignment/varicella_mut.sorted.bam \
 
 Inspect the VCF file columns using the Unix command chain:
 
-```{bash}
+```{bash, eval=FALSE}
 grep -v "^#"  results/exercise2/varicella_variants.vcf | column -t | less -S
 ```
 
@@ -441,13 +487,14 @@ it is not possible for a single genomic position to have two different bases.
 Use `samtools mpileup` to inspect the site 73233. What is the frequency of each base on this site?
 Rune the command below and see [Pileup format](https://en.wikipedia.org/wiki/Pileup_format)
 
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+~~~bash
+```{bash, eval=FALSE}
+conda activate sequencing
 
 samtools mpileup -r NC_001348:73233-73233 -f data/ref/varicella.fasta \
     results/exercise2/alignment/varicella_mut.sorted.bam
 ```
+~~~
 
 Answer:  <font color="white"> 170 T, 1 A, 2 G </font>
 
@@ -466,7 +513,7 @@ in comparison to the reference sequence provided for the varicella virus.
 Create the results directory for this exercise:
 
 ~~~bash
-```{bash}
+```{bash, eval=FALSE}
 mkdir results/exercise3
 ```
 ~~~
@@ -478,7 +525,7 @@ mkdir results/exercise3
 Run `breseq`
 
 ~~~bash
-```{bash}
+```{bash, eval=FALSE}
 breseq -j 1 -o results/exercise3 \
     -r data/ref/varicella.gb data/seq/varicella_mut*.fastq
 ```
@@ -502,9 +549,8 @@ Use the `breseq bam2aln` command to investigate the missing mutations
 Answer: 
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 breseq bam2aln \
     -f data/ref/varicella.fasta \
@@ -540,7 +586,7 @@ Sequencing files from *dumas* strain: `data/varicella_l1.fastq`, `data/varicella
 ### Step 1: Init
 
 ~~~bash
-```{bash}
+```{bash, eval=FALSE}
 mkdir results/exercise4
 ```
 ~~~
@@ -552,9 +598,8 @@ Assemble the reads provided into a genome using `abyss-pe` for `k=128`
 > (Computation time: 5 minutes)
 
 ~~~bash
-```{bash}
-export PATH=~/miniconda3/bin:$PATH
-source activate sequencing
+```{bash, eval=FALSE}
+conda activate sequencing
 
 abyss-pe name=varicella k=128 --directory=results/exercise4 \
     in='../../data/seq/varicella_l1.fastq ../../data/seq/varicella_l2.fastq'
