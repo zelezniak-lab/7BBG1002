@@ -1,6 +1,6 @@
 ---
-title: "BBT045: Sequencing Technologies Tutorial"
-author: Filip Buric (adapted from Rui Pereira's exercise protocol)
+title: "7BBG1002: Sequencing Technologies Tutorial"
+author: Aleksej Zelezniak (adapted from Filip Buric (adapted from Rui Pereira's exercise protocol))
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -94,7 +94,7 @@ For future reference, this functionality is achieved with `knitr` package which 
 Before proceeding uNow go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by dafault knitr is missing.
 
 ```{r}
-install.packages("tidyverse")
+#install.packages("tidyverse")
 ```
 
 ```{r, setup}
