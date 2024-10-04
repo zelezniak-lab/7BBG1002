@@ -88,7 +88,7 @@ This is officially referred to as ["dependency hell"](https://en.wikipedia.org/w
 an can be traumatizing.
 
 Run the code chunk below to enable running conda commands from this notebook.
-For future reference, this functionality is achieved with `knitr` package which is a part of 
+For future reference, this functionality is achieved with `knitr` package which is a part of                                                    
 [knitr](https://yihui.org/knitr/options/) package.
 
 Before proceeding uNow go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by dafault knitr is missing.
