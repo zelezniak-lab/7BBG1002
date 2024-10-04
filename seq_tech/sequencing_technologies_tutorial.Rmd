@@ -1,0 +1,64 @@
+---
+title: "Tutorial: Sequencing Technologies"
+output: html_notebook
+---
+
+# Initial setup: Work environment and Data
+
+It's standard practice to create a new conda environment for each project.
+This is because each project may require a number of different software packages,
+with certain version. Even if these requirements are very similar between the projects,
+even small differences may topple the house of cards that is the software ecosystem.
+This is officially referred to as ["dependency hell"](https://en.wikipedia.org/wiki/Dependency_hell)
+an can be traumatizing.
+
+Please paste the commands between ``` marks below:
+
+Conda can fetch packages from many different sources (aka "channels")
+Let's add the Bioconda channel, as well as the general-purpose conda-forge.
+("defaults" is given first to give it top priority when searching for packages)
+
+```
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
+
+Create and activate a new environment for this exercise. 
+The first command below will ask for confirmation. Just press `y` and [Enter]
+
+```
+conda create --name sequencing
+conda activate sequencing
+```
+
+You should see `(sequencing)` to the left of your command prompt.
+If you don't, try running 
+
+```
+source ~/.bashrc
+```
+
+If that still doesn't work, please ask for help so we make sure we all start from the same place.
+
+Now install the software needed for this exercise.
+This step will also ask for confirmation. 
+Later on / in real life, it's good to to examine what changes are made when installing new packages.
+
+```
+conda install samtools bowtie2 breseq abyss bcftools wgsim emboss tree
+```
+
+Run the code chunk below to enable running conda commands from this notebook.
+For future reference, this functionality is achieved with the built-in 
+[knitr](https://yihui.org/knitr/options/) package.
+
+```{r, setup}
+knitr::opts_chunk$set(engine.opts = "-i")
+```
+
+Ignore the errors about " Inappropriate ioctl for device" 
+and "no job control in this shell". They're a harmless consequence of this.
+
+
+# Exercise 1
