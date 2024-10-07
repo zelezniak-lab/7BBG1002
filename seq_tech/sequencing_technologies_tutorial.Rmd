@@ -56,7 +56,9 @@ mkdir results
 ```
 
 
-## Work environment
+## Work environment (Run from notebook)
+
+
 It's standard practice to create a new conda environment for each project.
 This is because each project may require a number of different software packages,
 with certain version. Even if these requirements are very similar between the projects,
@@ -65,10 +67,13 @@ This is officially referred to as ["dependency hell"](https://en.wikipedia.org/w
 an can be traumatizing.
 
 Run the code chunk below to enable running conda commands from this notebook.
-For future reference, this functionality is achieved with the built-in 
+For future reference, this functionality is achieved with `knitr` package which is a part of `tidyverse`                                                  
 [knitr](https://yihui.org/knitr/options/) package.
 
+Before proceeding go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by default knitr might be missing.
+
 ```{r, setup}
+#install.packages("tidyverse")
 knitr::opts_chunk$set(engine.opts = "-i")
 ```
 
@@ -78,6 +83,7 @@ Let's add the Bioconda channel, as well as the general-purpose conda-forge.
 
 Ignore the errors about " Inappropriate ioctl for device" 
 and "no job control in this shell". They're a harmless consequence of this.
+
 
 ```{bash, eval=FALSE}
 conda config --add channels defaults

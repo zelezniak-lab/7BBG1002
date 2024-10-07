@@ -11,7 +11,7 @@
 
 <meta name="author" content="Aleksej Zelezniak (adapted from Filip Buric (adapted from Rui Pereira’s exercise protocol))" />
 
-<meta name="date" content="2024-10-05" />
+<meta name="date" content="2024-10-07" />
 
 <title>7BBG1002: Sequencing Technologies Tutorial</title>
 
@@ -2754,7 +2754,7 @@ border-radius: 0px;
 Tutorial</h1>
 <h4 class="author">Aleksej Zelezniak (adapted from Filip Buric (adapted
 from Rui Pereira’s exercise protocol))</h4>
-<h4 class="date">2024-10-05</h4>
+<h4 class="date">2024-10-07</h4>
 
 </div>
 
@@ -2764,10 +2764,10 @@ from Rui Pereira’s exercise protocol))</h4>
 <ul>
 <li>Develop reproducible computational procedures using R
 notebooks.</li>
+<li>Work with conda environments.</li>
 <li>Run sequence processing software via command-line interfaces.</li>
 <li>Run wrapper R libraries to manage and execute sequence
 workflows.</li>
-<li>Work with conda environments</li>
 </ul>
 </div>
 <div id="initial-setup-work-environment-and-data" class="section level1">
@@ -2811,8 +2811,8 @@ the write permission (<code>-w</code>) for anyone on the server
 <p>Then create results directory</p>
 <pre class="bash"><code>mkdir results</code></pre>
 </div>
-<div id="work-environment" class="section level2">
-<h2>Work environment</h2>
+<div id="work-environment-run-from-notebook" class="section level2">
+<h2>Work environment (Run from notebook)</h2>
 <p>It’s standard practice to create a new conda environment for each
 project. This is because each project may require a number of different
 software packages, with certain version. Even if these requirements are
@@ -2822,13 +2822,14 @@ referred to as <a href="https://en.wikipedia.org/wiki/Dependency_hell">“depend
 hell”</a> an can be traumatizing.</p>
 <p>Run the code chunk below to enable running conda commands from this
 notebook. For future reference, this functionality is achieved with
-<code>knitr</code> package which is a part of<br />
+<code>knitr</code> package which is a part of
+<code>tidyverse</code><br />
 <a href="https://yihui.org/knitr/options/">knitr</a> package.</p>
-<p>Before proceeding uNow go back to R console and install missing
-tidyverse package, this is needed to Run notebooks, i.e. by dafault
-knitr is missing.</p>
-<pre class="r"><code>#install.packages(&quot;tidyverse&quot;)</code></pre>
-<pre class="r"><code>knitr::opts_chunk$set(engine.opts = &quot;-i&quot;)</code></pre>
+<p>Before proceeding go back to R console and install missing tidyverse
+package, this is needed to Run notebooks, i.e. by default knitr might be
+missing.</p>
+<pre class="r"><code>#install.packages(&quot;tidyverse&quot;)
+knitr::opts_chunk$set(engine.opts = &quot;-i&quot;)</code></pre>
 <p>Conda can fetch packages from many different sources (aka “channels”)
 Let’s add the Bioconda channel, as well as the general-purpose
 conda-forge. (“defaults” is given first to give it top priority when
@@ -2848,6 +2849,7 @@ chunk</strong>. Which means that within every code chunk that we want to
 use our environment we need to first run conda activate
 <environment_name>.</p>
 <pre class="bash"><code>conda create --name sequencing -y
+source ~/.bashrc 
 conda activate sequencing</code></pre>
 <p>If that still doesn’t work, please ask for help so we make sure we
 all start from the same place.</p>
@@ -3108,7 +3110,7 @@ you.</p>
 </div>
 <div id="step-2-identify-point-mutations" class="section level3">
 <h3>Step 2: Identify point mutations</h3>
-<p>Use the <code>samtools mpileup</code> command to identify genomic
+<p>Use the <code>bcftools mpileup</code> command to identify genomic
 variants (aka single nucleotide variants, <a href="https://en.wikipedia.org/wiki/SNV_calling_from_NGS_data">SNVs</a>)
 in the alignment. This will create the file
 <code>varicella_variants.bcf</code></p>
@@ -3116,7 +3118,7 @@ in the alignment. This will create the file
 ``` bash
 conda activate sequencing
 
-samtools mpileup -g -f data/ref/varicella.fasta results/exercise2/alignment/varicella_mut.sorted.bam &gt; results/exercise2/varicella_variants.bcf
+bcftools mpileup -f data/ref/varicella.fasta results/exercise2/alignment/varicella_mut.sorted.bam &gt; results/exercise2/varicella_variants.bcf
 ```</code></pre>
 </div>
 <div id="step-3-inspect-mutations-pt-1" class="section level3">
@@ -3215,6 +3217,7 @@ mkdir results/exercise3
 <p>Run <code>breseq</code></p>
 <pre class="bash"><code>
 ``` bash
+conda activate sequencing
 breseq -j 1 -o results/exercise3 \
     -r data/ref/varicella.gb data/seq/varicella_mut*.fastq
 ```</code></pre>
@@ -3259,6 +3262,9 @@ plot.</p>
 </div>
 <div id="exercise-4-de-novo-genome-assembly" class="section level1">
 <h1>Exercise 4: De novo genome assembly</h1>
+<p>(this exercise will not work due to high memory requirements,
+i.e. exceeding free version of Prosit Cloud, you can do it on your own
+once you gain access to KCL HPC system)</p>
 <p>So far we’ve been using a reference genome to align reads to it. When
 one is not available, the genome has to be assembled <em>de novo</em>
 from the reads. Here, we’ll be using the <code>abyss</code> assembler

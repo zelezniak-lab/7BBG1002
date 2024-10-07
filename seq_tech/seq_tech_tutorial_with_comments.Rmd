@@ -119,7 +119,6 @@ The command conda activate activates the environment within the current code chu
 
 ```{bash, eval=FALSE}
 conda create --name sequencing -y
-source ~/.bashrc 
 conda activate sequencing
 ```
 If that still doesn't work, please ask for help so we make sure we all start from the same place.
@@ -217,6 +216,9 @@ Align the sequencing data to the reference genome using `bowtie2`.
 This will create the file `varicella.sam`
 The `\ ` symbol simply breaks the command across multiple lines for readability.
 
+
+
+
 > (Computation time: 1 min)
 
 ~~~bash
@@ -230,13 +232,49 @@ bowtie2 -x results/exercise1/bowtie_index/varicella \
 ```
 ~~~
 
+Run bowtie2 to align sequencing reads:
 
+bowtie2 -x results/exercise1/bowtie_index/varicella \
+        -1 data/seq/varicella1.fastq -2 data/seq/varicella2.fastq \
+        -S results/exercise1/alignment/varicella.sam
+This command runs the Bowtie2 aligner to map paired-end sequencing reads to a reference genome. Let's break down the command options:
+
+-x results/exercise1/bowtie_index/varicella: Specifies the path to the Bowtie2 index for the reference genome. In this case, it is using an index located at results/exercise1/bowtie_index/varicella.
+
+-1 data/seq/varicella1.fastq: Specifies the first FASTQ file containing the forward reads (read 1) from a paired-end sequencing run.
+
+-2 data/seq/varicella2.fastq: Specifies the second FASTQ file containing the reverse reads (read 2) from a paired-end sequencing run.
+
+-S results/exercise1/alignment/varicella.sam: Indicates the output file format and location. The -S flag tells Bowtie2 to generate a SAM file, which is a standard format for storing aligned sequences. The output will be saved as varicella.sam in the results/exercise1/alignment directory.
+
+Overall Purpose:
+The entire set of commands aligns the paired-end sequencing reads from the input files (varicella1.fastq and varicella2.fastq) to the reference genome index located in results/exercise1/bowtie_index/varicella. The resulting alignments are saved in the varicella.sam file.
+
+This process is typically used to identify where the sequencing reads map to the reference genome, which is an essential step in downstream genomic analyses, such as variant calling or gene expression profiling.
 
 ### Step 4: Convert alignment to binary format
 
 To make reading the alignment info easier for the computer,
 convert the sequence alignment map (SAM) file to binary alignment map (BAM)
 using the `samtools` `view` command:
+
+samtools view: This is the samtools command for viewing and converting SAM/BAM files.
+
+-b: This flag tells samtools to output the file in BAM format (binary version of the SAM format). BAM files are compressed and take up less space than SAM files.
+
+-S: This flag specifies that the input file is in SAM format. (Note: This option is typically not needed in newer versions of samtools if the input file has a .sam extension.)
+
+-o results/exercise1/alignment/varicella.bam: The -o option specifies the output file name. In this case, the converted BAM file will be saved as varicella.bam in the results/exercise1/alignment/ directory.
+
+results/exercise1/alignment/varicella.sam: This is the input file in SAM format (from the previous bowtie2 alignment step).
+
+Overall Purpose:
+This command converts the varicella.sam file (a text-based format) into a varicella.bam file (a more compact binary format), making it easier to handle for subsequent processing steps. BAM files are the preferred format for storing large-scale alignment data due to their smaller size and efficient random access capability.
+
+Why Use BAM Instead of SAM?
+Space Efficiency: BAM is compressed, which significantly reduces storage requirements compared to SAM.
+Faster Access and Processing: Most bioinformatics tools can process BAM files more quickly and efficiently.
+Indexing Compatibility: BAM files can be indexed, allowing for fast retrieval of reads from specific genomic regions.
 
 > (Computation time: seconds)
 
@@ -404,7 +442,7 @@ The workflow will also create `results/exercise2` for you.
 
 ### Step 2: Identify point mutations
 
-Use the `bcftools mpileup` command to identify genomic variants 
+Use the `samtools mpileup` command to identify genomic variants 
 (aka single nucleotide variants, [SNVs](https://en.wikipedia.org/wiki/SNV_calling_from_NGS_data))
 in the alignment. This will create the file `varicella_variants.bcf`
 
@@ -460,8 +498,6 @@ Inspect the VCF file columns using the Unix command chain:
 grep -v "^#"  results/exercise2/varicella_variants.vcf | column -t | less -S
 ```
 
-
-
 (Chain: Filter out header | align columns | show on screen)
 
 How can you interpret the [PHRED](https://en.wikipedia.org/wiki/Phred_quality_score) 
@@ -489,6 +525,7 @@ it is not possible for a single genomic position to have two different bases.
 Use `samtools mpileup` to inspect the site 73233. What is the frequency of each base on this site?
 Rune the command below and see [Pileup format](https://en.wikipedia.org/wiki/Pileup_format)
 
+
 ~~~bash
 ```{bash, eval=FALSE}
 conda activate sequencing
@@ -500,6 +537,54 @@ samtools mpileup -r NC_001348:73233-73233 -f data/ref/varicella.fasta \
 
 Answer:  <font color="white"> 170 T, 1 A, 2 G </font>
 
+
+#### Explanation of Each Column
+
+| Column | Description                                                                                  | Example Value                       |
+|--------|----------------------------------------------------------------------------------------------|-------------------------------------|
+| 1      | **Chromosome or scaffold name**: The name of the reference chromosome or contig               | `NC_001348`                         |
+| 2      | **Position**: The genomic position (1-based) in the reference genome                          | `73233`                             |
+| 3      | **Reference base**: The base at this position in the reference genome                         | `t` (lowercase, indicating thymine) |
+| 4      | **Read depth**: The number of reads that cover this position                                  | `90`                                |
+| 5      | **Read bases**: Encodes observed bases at this position in aligned reads, along with metadata | `,,,.,.g,,,,,,..,,.,,.,,..,..,A,...` |
+| 6      | **Base quality scores**: ASCII-encoded quality scores for the observed bases                  | `222C2C22222222222222C22222C222...` |
+
+#### Understanding the Read Bases Column (Column 5)
+
+The read bases column (`,,,.,.g,,,,,,..,,.,,.,,..,..,A,.,.,.,..,.,,..,..,,g..,.,...,...,.,,,,.....,,...,,,.,.,,..^K.`) encodes the bases observed at this position and additional information:
+
+- **`.` or `,`**: Bases that **match the reference base** (`t`).
+  - `.`: Match on the **forward strand**.
+  - `,`: Match on the **reverse strand**.
+- **`A`, `C`, `G`, `T`**: Bases that **differ from the reference** (alternate alleles).
+  - Uppercase: Observed on the **forward strand**.
+  - Lowercase: Observed on the **reverse strand**.
+- **`^` followed by a character** (e.g., `^K`): **Start of a read**. The following character represents the mapping quality.
+- **`$`**: **End of a read**.
+- **Insertions and deletions**:
+  - `+<number><bases>`: Insertion relative to the reference.
+  - `-<number><bases>`: Deletion relative to the reference.
+
+#### Interpreting the Base Quality Scores (Column 6)
+
+The base quality scores (`222C2C22222222222222C22222C222...`) are **ASCII-encoded Phred scores** representing the probability of base call errors:
+
+- Phred Score (`Q`) = `-10 * log10(probability of error)`
+- **ASCII to Phred Conversion**:
+  - `2` in ASCII = 50, so `50 - 33 = 17` (Phred score 17).
+  - `C` in ASCII = 67, so `67 - 33 = 34` (Phred score 34).
+
+#### Example Observations:
+1. **Position:** `73233` on chromosome `NC_001348`.
+2. **Reference Base:** `t` (thymine).
+3. **Read Depth:** `90` reads.
+4. **Base Composition:**
+   - Most reads match the reference (`.` or `,`).
+   - A few alternate alleles: `g` (on reverse strand) and `A` (on forward strand).
+5. **Quality Scores:** Most bases have scores of `17` or `34`, indicating **high confidence**.
+
+#### Final Interpretation
+This pileup output suggests a high-confidence base at position `73233` with a few observed alternate alleles (`A` and `g`). This may indicate a potential SNP. Further analysis of the alternate allele frequency and quality is required to confirm if this is a true variant.
 
 
 # Exercise 3: Finding Mutations with breseq
@@ -528,7 +613,6 @@ Run `breseq`
 
 ~~~bash
 ```{bash, eval=FALSE}
-conda activate sequencing
 breseq -j 1 -o results/exercise3 \
     -r data/ref/varicella.gb data/seq/varicella_mut*.fastq
 ```
@@ -551,6 +635,8 @@ Use the `breseq bam2aln` command to investigate the missing mutations
 
 Answer: 
 
+
+
 ~~~bash
 ```{bash, eval=FALSE}
 conda activate sequencing
@@ -572,8 +658,8 @@ Find also the coverage plot.
 
 
 
-# Exercise 4: De novo genome assembly
 
+# Exercise 4: De novo genome assembly
 
 (this exercise will not work due to high memory requirements, i.e. exceeding free version of Prosit Cloud, you can do it on your own once you gain access to KCL HPC system)
 
