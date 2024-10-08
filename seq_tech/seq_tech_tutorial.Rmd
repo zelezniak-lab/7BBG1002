@@ -79,7 +79,7 @@ mkdir results
 ```
 
 
-## Work environment (Run from notebook)
+## Work environment 
 
 
 It's standard practice to create a new conda environment for each project.
