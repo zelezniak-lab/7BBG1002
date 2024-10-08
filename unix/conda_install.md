@@ -34,6 +34,8 @@ The dot means "this directory" since Unix ignores the current directory by defau
 ./Miniconda3-latest-Linux-x86_64.sh
 ```
 
+
+
 The installation is interactive:
 
 - It will ask you to read and accept a license agreement.
@@ -47,9 +49,18 @@ by running conda init? [yes|no]". Write "yes" (no quotes) and press [Enter].
 The visible effect of this is that when you'll open a new terminal, you'll see
 `(base)` to the left of the command prompt. This just means conda is "active" for you.
 
+if `(base)` is not there, run the following command
+```
+source ~./bashrc
+```
+
+
 That's it!
 
 To save space, remove the kit :)
+
+
+
 
 ```
 rm Miniconda3-latest-Linux-x86_64.sh
