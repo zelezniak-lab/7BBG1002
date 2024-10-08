@@ -51,7 +51,7 @@ The visible effect of this is that when you'll open a new terminal, you'll see
 
 if `(base)` is not there, run the following command
 ```
-source ~./bashrc
+source ~/.bashrc
 ```
 
 
