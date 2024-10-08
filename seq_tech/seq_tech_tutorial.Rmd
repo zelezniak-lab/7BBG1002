@@ -171,6 +171,7 @@ Create a separate results dir
 
 ~~~bash
 ```{bash, eval=FALSE}
+
 mkdir results/exercise1
 ```
 ~~~
@@ -189,6 +190,7 @@ then build the bowtie index accordingly.
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 # Convert GFF3 > FASTA
@@ -221,6 +223,7 @@ The `\ ` symbol simply breaks the command across multiple lines for readability.
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 mkdir results/exercise1/alignment
@@ -242,6 +245,7 @@ using the `samtools` `view` command:
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 samtools view -b -S -o results/exercise1/alignment/varicella.bam \
@@ -260,6 +264,7 @@ This will create the file `varicella.sorted.bam`
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 samtools sort results/exercise1/alignment/varicella.bam -o \
@@ -277,6 +282,7 @@ index the sorted BAM file using `samtools` `index` command:
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 samtools index results/exercise1/alignment/varicella.sorted.bam
@@ -296,6 +302,7 @@ and the Unix `awk` text processor to extract the values of interest:
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 samtools depth results/exercise1/alignment/varicella.sorted.bam | awk '{sum+=$3} END {print "Average = ", sum/124884}'
 ```
@@ -315,6 +322,7 @@ Answer:
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 samtools depth results/exercise1/alignment/varicella.sorted.bam > results/exercise1/alignment/coverage.tsv
 ```
@@ -358,6 +366,7 @@ Create a sorted and indexed BAM file using the code below, which encapsulates st
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 DATA_DIR=data/seq
@@ -410,6 +419,7 @@ in the alignment. This will create the file `varicella_variants.bcf`
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 bcftools mpileup -f data/ref/varicella.fasta results/exercise2/alignment/varicella_mut.sorted.bam > results/exercise2/varicella_variants.bcf
@@ -424,6 +434,7 @@ Use `bcftools call` command to convert the binary call format (BCF) to
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 bcftools call -c -v results/exercise2/varicella_variants.bcf > results/exercise2/varicella_variants.vcf
@@ -443,6 +454,7 @@ VCF (and BCF) contain only the information needed for some downstream tasks.
 This is an interactive command so **run it in the terminal**:
 
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 samtools tview results/exercise2/alignment/varicella_mut.sorted.bam \
@@ -491,6 +503,7 @@ Rune the command below and see [Pileup format](https://en.wikipedia.org/wiki/Pil
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 samtools mpileup -r NC_001348:73233-73233 -f data/ref/varicella.fasta \
@@ -528,6 +541,7 @@ Run `breseq`
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 breseq -j 1 -o results/exercise3 \
     -r data/ref/varicella.gb data/seq/varicella_mut*.fastq
@@ -553,6 +567,7 @@ Answer:
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 breseq bam2aln \
@@ -604,6 +619,7 @@ Assemble the reads provided into a genome using `abyss-pe` for `k=128`
 
 ~~~bash
 ```{bash, eval=FALSE}
+source ~/.bashrc 
 conda activate sequencing
 
 abyss-pe name=varicella k=128 --directory=results/exercise4 \

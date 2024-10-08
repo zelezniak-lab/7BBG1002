@@ -11,7 +11,7 @@
 
 <meta name="author" content="Aleksej Zelezniak (adapted from Filip Buric (adapted from Rui Pereira’s exercise protocol))" />
 
-<meta name="date" content="2024-10-07" />
+<meta name="date" content="2024-10-08" />
 
 <title>7BBG1002: Sequencing Technologies Tutorial</title>
 
@@ -2754,7 +2754,7 @@ border-radius: 0px;
 Tutorial</h1>
 <h4 class="author">Aleksej Zelezniak (adapted from Filip Buric (adapted
 from Rui Pereira’s exercise protocol))</h4>
-<h4 class="date">2024-10-07</h4>
+<h4 class="date">2024-10-08</h4>
 
 </div>
 
@@ -2899,6 +2899,7 @@ disappear when this webpage is created for some reason…</p>
 <p>Create a separate results dir</p>
 <pre class="bash"><code>
 ``` bash
+
 mkdir results/exercise1
 ```</code></pre>
 </div>
@@ -2915,6 +2916,7 @@ accordingly.</p>
 </blockquote>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 # Convert GFF3 &gt; FASTA
@@ -2945,6 +2947,7 @@ command across multiple lines for readability.</p>
 </blockquote>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 mkdir results/exercise1/alignment
@@ -2963,6 +2966,7 @@ using the <code>samtools</code> <code>view</code> command:</p>
 </blockquote>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 samtools view -b -S -o results/exercise1/alignment/varicella.bam \
@@ -2979,6 +2983,7 @@ samtools view -b -S -o results/exercise1/alignment/varicella.bam \
 </blockquote>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 samtools sort results/exercise1/alignment/varicella.bam -o \
@@ -2994,6 +2999,7 @@ using <code>samtools</code> <code>index</code> command:</p>
 </blockquote>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 samtools index results/exercise1/alignment/varicella.sorted.bam
@@ -3011,6 +3017,7 @@ processor to extract the values of interest:</p>
 </blockquote>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 samtools depth results/exercise1/alignment/varicella.sorted.bam | awk &#39;{sum+=$3} END {print &quot;Average = &quot;, sum/124884}&#39;
 ```</code></pre>
@@ -3026,6 +3033,7 @@ format is described at the end of the help.</p>
 <p>Answer:</p>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 samtools depth results/exercise1/alignment/varicella.sorted.bam &gt; results/exercise1/alignment/coverage.tsv
 ```</code></pre>
@@ -3065,6 +3073,7 @@ encapsulates steps 2-6 from Exercise 1 (except for the GFF &gt; FASTA
 conversion).</p>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 DATA_DIR=data/seq
@@ -3116,6 +3125,7 @@ in the alignment. This will create the file
 <code>varicella_variants.bcf</code></p>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 bcftools mpileup -f data/ref/varicella.fasta results/exercise2/alignment/varicella_mut.sorted.bam &gt; results/exercise2/varicella_variants.bcf
@@ -3128,6 +3138,7 @@ format (BCF) to (human-readable) variant call format (<a href="https://en.wikipe
 will create the file <code>varicella_variants.vcf</code></p>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 bcftools call -c -v results/exercise2/varicella_variants.bcf &gt; results/exercise2/varicella_variants.vcf
@@ -3146,7 +3157,8 @@ information. VCF (and BCF) contain only the information needed for some
 downstream tasks.</p>
 <p>This is an interactive command so <strong>run it in the
 terminal</strong>:</p>
-<pre class="bash"><code>conda activate sequencing
+<pre class="bash"><code>source ~/.bashrc 
+conda activate sequencing
 
 samtools tview results/exercise2/alignment/varicella_mut.sorted.bam \
     data/ref/varicella.fasta -p NC_001348:77985 </code></pre>
@@ -3185,6 +3197,7 @@ the frequency of each base on this site? Rune the command below and see
 format</a></p>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 samtools mpileup -r NC_001348:73233-73233 -f data/ref/varicella.fasta \
@@ -3217,6 +3230,7 @@ mkdir results/exercise3
 <p>Run <code>breseq</code></p>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 breseq -j 1 -o results/exercise3 \
     -r data/ref/varicella.gb data/seq/varicella_mut*.fastq
@@ -3241,6 +3255,7 @@ missing mutations</p>
 <p>Answer:</p>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 breseq bam2aln \
@@ -3291,6 +3306,7 @@ for <code>k=128</code></p>
 </blockquote>
 <pre class="bash"><code>
 ``` bash
+source ~/.bashrc 
 conda activate sequencing
 
 abyss-pe name=varicella k=128 --directory=results/exercise4 \
