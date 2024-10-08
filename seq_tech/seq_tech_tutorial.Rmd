@@ -1,5 +1,5 @@
 ---
-title: "7BBG1002: Sequencing Technologies Tutorial"
+title: "7BBG1002: Working Remotely and Reproducibly, NGS example Tutorial"
 author: Aleksej Zelezniak (adapted from Filip Buric (adapted from Rui Pereira's exercise protocol))
 date: "`r Sys.Date()`"
 output:
@@ -56,7 +56,7 @@ unzip data.zip
 ```
 
 To nicely see the contents of (small) directories, you can use
-the `tree` program, but you need to install it first (`conda install tree`)
+the `tree` program, but you need to install it first (`conda install -c conda-forge tree`)
 
 ```bash
 tree data
@@ -88,17 +88,6 @@ with certain version. Even if these requirements are very similar between the pr
 even small differences may topple the house of cards that is the software ecosystem.
 This is officially referred to as ["dependency hell"](https://en.wikipedia.org/wiki/Dependency_hell)
 an can be traumatizing.
-
-Run the code chunk below to enable running conda commands from this notebook.
-For future reference, this functionality is achieved with `knitr` package which is a part of `tidyverse`                                                  
-[knitr](https://yihui.org/knitr/options/) package.
-
-Before proceeding go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by default knitr might be missing.
-
-```{r, setup}
-#install.packages("tidyverse")
-knitr::opts_chunk$set(engine.opts = "-i")
-```
 
 Conda can fetch packages from many different sources (aka "channels")
 Let's add the Bioconda channel, as well as the general-purpose conda-forge.
@@ -142,8 +131,21 @@ conda list
 
 
 
+### Run using  R notebooks.
+
+Run the code chunk below to enable running conda commands from this notebook.
+For future reference, this functionality is achieved with `knitr` package which is a part of `tidyverse`                                                  
+[knitr](https://yihui.org/knitr/options/) package.
+
+Before proceeding go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by default knitr might be missing.
 
 # Exercise 1: Alignment
+
+```{r, setup}
+#install.packages("tidyverse")
+knitr::opts_chunk$set(engine.opts = "-i")
+```
+
 
 We'll be aligning sequencing data against the reference genome of a Varicella virus.
 

@@ -1,7 +1,29 @@
+---
+title: "7BBG1002: Working Remotely and Reproducibly, NGS example Tutorial"
+author: Aleksej Zelezniak (adapted from Filip Buric (adapted from Rui Pereira's exercise protocol))
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    df_print: paged
+  pdf_document: default
+---
+
+# Learning Outcomes
+
+- Develop reproducible computational procedures using R notebooks.
+- Work with conda environments.
+- Run sequence processing software via command-line interfaces.
+- Run wrapper R libraries to manage and execute sequence workflows.
+
+
 # Initial setup: Work environment and Data
 
 The starter notebook contains instructions for setting up your conda
-environment. Please follow these instructions, then continue using
+environment and R tidyvese package that is needed to interpret R notebooks. 
+Please follow these instructions, then continue using
 the notebook to write the commands used here and take notes for the exercises.
 You can also download a copy from [here](sequencing_technologies_tutorial.Rmd) for your own computer.
 
@@ -20,16 +42,17 @@ Please create a directory for this tutorial in your home directory and inside th
 copy the starter notebook from my directory. To do this run the following commands in the terminal after logging on to the server.
 
 ```bash
-cd
 mkdir NGS_Tutorial
-cp /home/sandra/NGS_Tutorial/sequencing_technologies_tutorial.Rmd NGS_Tutorial/
 cd NGS_Tutorial
+wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/seq_tech/sequencing_technologies_tutorial.Rmd 
+
 ```
 
 Now fetch a copy of the data we will be using:
 
 ```bash
-cp -r /home/sandra/NGS_Tutorial/data .
+wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/seq_tech/data.zip 
+unzip data.zip
 ```
 
 To nicely see the contents of (small) directories, you can use
@@ -56,7 +79,7 @@ mkdir results
 ```
 
 
-## Work environment (Run from notebook)
+## Work environment 
 
 
 It's standard practice to create a new conda environment for each project.
@@ -66,24 +89,12 @@ even small differences may topple the house of cards that is the software ecosys
 This is officially referred to as ["dependency hell"](https://en.wikipedia.org/wiki/Dependency_hell)
 an can be traumatizing.
 
-Run the code chunk below to enable running conda commands from this notebook.
-For future reference, this functionality is achieved with `knitr` package which is a part of `tidyverse`                                                  
-[knitr](https://yihui.org/knitr/options/) package.
-
-Before proceeding go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by default knitr might be missing.
-
-```{r, setup}
-#install.packages("tidyverse")
-knitr::opts_chunk$set(engine.opts = "-i")
-```
-
 Conda can fetch packages from many different sources (aka "channels")
 Let's add the Bioconda channel, as well as the general-purpose conda-forge.
 ("defaults" is given first to give it top priority when searching for packages)
 
 Ignore the errors about " Inappropriate ioctl for device" 
 and "no job control in this shell". They're a harmless consequence of this.
-
 
 ```{bash, eval=FALSE}
 conda config --add channels defaults
@@ -97,6 +108,7 @@ The command conda activate activates the environment within the current code chu
 
 ```{bash, eval=FALSE}
 conda create --name sequencing -y
+source ~/.bashrc 
 conda activate sequencing
 ```
 If that still doesn't work, please ask for help so we make sure we all start from the same place.
@@ -108,7 +120,6 @@ Later on / in real life, it's good to to examine what changes are made when inst
 **Make sure you activated the `sequencing` environment!**
 
 ```{bash, eval=FALSE}
-
 conda activate sequencing
 conda install samtools bowtie2 breseq abyss bcftools wgsim emboss tree -y
 ```
@@ -117,5 +128,15 @@ Lets inspect the packages that we just installed.
 conda activate sequencing
 conda list
 ```
+
+
+
+### Run using  R notebooks.
+
+Run the code chunk below to enable running conda commands from this notebook.
+For future reference, this functionality is achieved with `knitr` package which is a part of `tidyverse`                                                  
+[knitr](https://yihui.org/knitr/options/) package.
+
+Before proceeding go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by default knitr might be missing.
 
 # Exercise 1: Alignment
