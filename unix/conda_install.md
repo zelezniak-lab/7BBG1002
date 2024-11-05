@@ -49,7 +49,22 @@ by running conda init? [yes|no]". Write "yes" (no quotes) and press [Enter].
 The visible effect of this is that when you'll open a new terminal, you'll see
 `(base)` to the left of the command prompt. This just means conda is "active" for you.
 
+
+
+After installing, refresh it by running the following command:
+
+```
+source ~/miniconda3/bin/activate
+```
+
+To initialize conda on all available shells, run the following command:
+
+```
+conda init --all
+```
+
 if `(base)` is not there, run the following command
+
 ```
 source ~/.bashrc
 ```
@@ -58,8 +73,6 @@ source ~/.bashrc
 That's it!
 
 To save space, remove the kit :)
-
-
 
 
 ```
