@@ -1,4 +1,6 @@
 ---
+title: "7BBG1002: Using BLAST and HMMER from the Command Line Tutorial"
+author: Aleksej Zelezniak
 output: html_document
 editor_options: 
   chunk_output_type: inline
@@ -6,7 +8,6 @@ editor_options:
     wrap: sentence
 ---
 
-# Tutorial: Using BLAST and HMMER from the Command Line
 
 ### Overview
 
@@ -22,8 +23,10 @@ This tutorial is designed to get hands-on experience with two powerful sequence 
 
 ### Objectives
 
--   Run BLAST and HMMER from the command line.
--   Combine results from both tools to improve sequence detection, functional prediction to search metagenomes.
+- Build custom BLAST databases
+- Run BLAST from a command line
+- Filter BLAST results using command line tools
+- Build HMM profiles and use them to improve sequence detection, functional prediction to search metagenomes.
 
 ### 1. Setting Up Your Environment
 
@@ -46,7 +49,7 @@ This tutorial is designed to get hands-on experience with two powerful sequence 
         ``` sh
         conda create -n alignments
         conda activate alignments
-        conda install -c bioconda blast hmmer seqtk mafft
+        conda install -c bioconda blast hmmer seqtk mafft alv
         ```
 
     -   If you don't have conda, you need to first install conda.

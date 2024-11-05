@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Aleksej Zelezniak" />
 
 
-<title>alignments_tutorial</title>
+<title>7BBG1002: Using BLAST and HMMER from the Command Line Tutorial</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -348,12 +349,13 @@ display: none;
 
 
 
+<h1 class="title toc-ignore">7BBG1002: Using BLAST and HMMER from the
+Command Line Tutorial</h1>
+<h4 class="author">Aleksej Zelezniak</h4>
 
 </div>
 
 
-<div id="tutorial-using-blast-and-hmmer-from-the-command-line" class="section level1">
-<h1>Tutorial: Using BLAST and HMMER from the Command Line</h1>
 <div id="overview" class="section level3">
 <h3>Overview</h3>
 <pre><code>This tutorial is designed to get hands-on experience with two powerful sequence alignment tools: BLAST (Basic Local Alignment Search Tool) and HMMER. You will learn how to run these tools from the command line, understand their output, and see how to combine them for deeper sequence analysis.</code></pre>
@@ -370,8 +372,10 @@ be set</li>
 <div id="objectives" class="section level3">
 <h3>Objectives</h3>
 <ul>
-<li>Run BLAST and HMMER from the command line.</li>
-<li>Combine results from both tools to improve sequence detection,
+<li>Build custom BLAST databases</li>
+<li>Run BLAST from a command line</li>
+<li>Filter BLAST results using command line tools</li>
+<li>Build HMM profiles and use them to improve sequence detection,
 functional prediction to search metagenomes.</li>
 </ul>
 </div>
@@ -387,7 +391,7 @@ functional prediction to search metagenomes.</li>
 <li><p>Using Conda to install BLAST and HMMER:</p>
 <pre class="sh"><code>conda create -n alignments
 conda activate alignments
-conda install -c bioconda blast hmmer seqtk mafft</code></pre></li>
+conda install -c bioconda blast hmmer seqtk mafft alv</code></pre></li>
 <li><p>If you don’t have conda, you need to first install conda. See
 instructions <a href="../unix/conda_install.html">here</a></p></li>
 </ul></li>
@@ -589,7 +593,6 @@ database size affects the search results.</li>
 </ol>
 <p>Feel free to reach out with any questions or if you need further
 guidance on the exercises!</p>
-</div>
 </div>
 
 
