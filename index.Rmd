@@ -21,7 +21,7 @@ output:
 [Tutorial](seq_tech/seq_tech_tutorial.html)
 
 ## Tutorial: Alignments - BLAST and HMMER 
-[Tutorial](alignmaents/alignments_tutorial.html)
+[Tutorial](alignments/alignments_tutorial.html)
 
 
 <!-- ## Tutorial: Unix -->
