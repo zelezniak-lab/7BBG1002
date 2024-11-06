@@ -103,7 +103,7 @@ The sequences were downloaded for you but you can access them [here](https://www
 
         ``` sh
         cp /scratch/grp/msc_appbio/alignments/uniref50_db.tar .
-        tar xvf uniref50.tar 
+        tar xvf uniref50_db.tar 
         ```
 
 ### 3. Running BLAST from the Command Line
