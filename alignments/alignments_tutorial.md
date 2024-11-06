@@ -99,7 +99,7 @@ The sequences were downloaded for you but you can access them [here](https://www
         To save time, I've already created database for you, instead copy it to your folder and unpack it:
 
         ``` sh
-        cp /scratch/users/k2151359/uniref50.tar .
+        cp /scratch/grp/msc_appbio/alignments/uniref50_db.tar .
         tar xvf uniref50.tar 
         ```
 
