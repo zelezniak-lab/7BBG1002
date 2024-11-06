@@ -389,7 +389,8 @@ functional prediction to search metagenomes.</li>
 <li><p>Navigate to your scratch space</p>
 <pre class="sh"><code>/scratch/users/kYOURNUMBER/</code></pre></li>
 <li><p>Using Conda to install BLAST and HMMER:</p>
-<pre class="sh"><code>conda create -n alignments
+<pre class="sh"><code>module load anaconda3/2022.10-gcc-13.2.0
+conda create -n alignments
 conda activate alignments
 conda install -c bioconda blast hmmer seqtk mafft alv</code></pre></li>
 <li><p>If you don’t have conda, you need to first install conda. See

@@ -47,6 +47,7 @@ This tutorial is designed to get hands-on experience with two powerful sequence 
     -   Using Conda to install BLAST and HMMER:
 
         ``` sh
+        module load anaconda3/2022.10-gcc-13.2.0
         conda create -n alignments
         conda activate alignments
         conda install -c bioconda blast hmmer seqtk mafft alv
