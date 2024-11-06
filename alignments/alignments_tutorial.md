@@ -35,7 +35,7 @@ This tutorial is designed to get hands-on experience with two powerful sequence 
     -   Please login to the CREATE note
 
         ``` sh
-        srun -c 4 -p cpu --time=03:00:00 --pty /bin/bash
+        srun -p cpu --time=03:00:00 --pty /bin/bash # use your assigned partition instead of cpu
         ```
 
     -   Navigate to your scratch space
@@ -177,7 +177,12 @@ It is particularly useful for finding more remote homologs compared to BLAST.
     -   To create a profile HMM, you need an MSA file in FASTA format.
         Let's start first from extracting identified sequences using very useful and lightweight `seqtk` utility for sequence manipulation.
         You can find more info about `seqtk` [here](https://github.com/lh3/seqtk).
-
+        First extract the hits IDs.
+        ```sh
+        cat significant_blast_hits.txt | cut -f2 > significant_blast_hits.ids
+        
+        ```
+        Then filter out from huge database file
         ``` sh
         seqtk subseq /scratch/grp/msc_appbio/alignments/uniref50.fasta significant_blast_hits.ids > blast_hits.fasta
         ```

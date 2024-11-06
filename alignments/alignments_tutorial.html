@@ -385,7 +385,7 @@ functional prediction to search metagenomes.</li>
 <li><p><strong>Install BLAST and HMMER</strong>:</p>
 <ul>
 <li><p>Please login to the CREATE note</p>
-<pre class="sh"><code>srun -c 4 -p cpu --time=03:00:00 --pty /bin/bash</code></pre></li>
+<pre class="sh"><code>srun -p cpu --time=03:00:00 --pty /bin/bash # use your assigned partition instead of cpu</code></pre></li>
 <li><p>Navigate to your scratch space</p>
 <pre class="sh"><code>/scratch/users/kYOURNUMBER/</code></pre></li>
 <li><p>Using Conda to install BLAST and HMMER:</p>
@@ -512,7 +512,11 @@ remote homologs compared to BLAST.</p>
 <li><p>To create a profile HMM, you need an MSA file in FASTA format.
 Let’s start first from extracting identified sequences using very useful
 and lightweight <code>seqtk</code> utility for sequence manipulation.
-You can find more info about <code>seqtk</code> <a href="https://github.com/lh3/seqtk">here</a>.</p>
+You can find more info about <code>seqtk</code> <a href="https://github.com/lh3/seqtk">here</a>. First extract the hits
+IDs.</p>
+<pre class="sh"><code>cat significant_blast_hits.txt | cut -f2 &gt; significant_blast_hits.ids
+</code></pre>
+<p>Then filter out from huge database file</p>
 <pre class="sh"><code>seqtk subseq /scratch/grp/msc_appbio/alignments/uniref50.fasta significant_blast_hits.ids &gt; blast_hits.fasta</code></pre></li>
 <li><p>Now let’s aligned the extracted sequences, using <a href="https://mafft.cbrc.jp/alignment/software/">MAFFT</a>.</p>
 <pre class="sh"><code>mafft  blast_hits.fasta &gt; hits_alignment.fasta</code></pre></li>
