@@ -32,7 +32,7 @@ cp /scratch/grp/msc_appbio/ops-rstudio.sh .
 From you home directory run the following command.
 
 ```bash
-sbatch rstudio.sh
+sbatch ops-rstudio.sh
 ```
 
 Follow instructions in slurm output file by reading it using `cat slurm-xxxxxxxx.out` where xxxxxxxx is submitted job id. 
@@ -168,15 +168,13 @@ We'll be aligning sequencing data against the reference genome of a Varicella vi
 
 But first lets take a look at the Varicella genome
 
-```{r}
+```{r, eval=FALSE}
 library(geneviewer)
 
 gff_file <- "data/ref/varicella.gff"      # small genome annotation
 fasta_file <- "data/ref/varicella.fasta"  # reference sequence 
 
-
 gff <- read_gff(gff_file) %>% filter(type == "CDS")
-
 
 GC_chart(
   gv,
