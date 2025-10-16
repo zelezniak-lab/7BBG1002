@@ -21,11 +21,27 @@ output:
 
 # Initial setup: Work environment and Data
 
+Before we begin please, login to CREATE and copy the following script to your home directory.
+The file is a running script to start Rstudio server that you will need to login.
+
+```bash
+cp /scratch/grp/msc_appbio/ops-rstudio.sh .
+
+```
+
+From you home directory run the following command.
+
+```bash
+sbatch rstudio.sh
+```
+
+Follow instructions in slurm output file by reading it using `cat slurm-xxxxxxxx.out` where xxxxxxxx is submitted job id. 
+
 The starter notebook contains instructions for setting up your conda
 environment and R tidyvese package that is needed to interpret R notebooks. 
 Please follow these instructions, then continue using
 the notebook to write the commands used here and take notes for the exercises.
-You can also download a copy from [here](sequencing_technologies_tutorial.Rmd) for your own computer.
+You can also download a copy from [here](sequencing_technologies_tutorial.Rmd) for your own computer. 
 
 The notebook that will serve as both a rudimentary pipeline and final (reproducible) report.
 
@@ -129,8 +145,6 @@ conda activate sequencing
 conda list
 ```
 
-
-
 ### Run using  R notebooks.
 
 Run the code chunk below to enable running conda commands from this notebook.
@@ -142,7 +156,7 @@ Before proceeding go back to R console and install missing tidyverse package, th
 # Exercise 1: Alignment
 
 ```{r, setup}
-#install.packages("tidyverse")
+install.packages(setdiff(c("tidyverse", "geneviewer"), rownames(installed.packages())))
 knitr::opts_chunk$set(engine.opts = "-i")
 ```
 
@@ -150,6 +164,42 @@ knitr::opts_chunk$set(engine.opts = "-i")
 We'll be aligning sequencing data against the reference genome of a Varicella virus.
 
 ![](img/align_to_ref.png)
+
+
+But first lets take a look at the Varicella genome
+
+```{r}
+library(geneviewer)
+
+gff_file <- "data/ref/varicella.gff"      # small genome annotation
+fasta_file <- "data/ref/varicella.fasta"  # reference sequence 
+
+
+gff <- read_gff(gff_file) %>% filter(type == "CDS")
+
+
+GC_chart(
+  gv,
+  start   = "start",
+  end     = "end",
+  strand  = "strand",
+) %>%
+  GC_title("Varicella genome (CDS)") %>%
+  GC_clusterLabel() %>%              # label the track
+  GC_scale(axis_type = "range") %>%  # show full range (handy for size context)
+  GC_genes(group = "gene",           # colour/group by feature name (or product)
+           stroke = "none",
+           marker_size = "small") %>%
+  GC_labels(label= "gene",
+            adjustLabels = TRUE,
+             show = TRUE,
+            fontSize = "5px",)
+            
+```
+
+
+
+
 
 This mainly involves using `bowtie2` to align short-read sequencing data to the reference genome and 
 `samtools` to post-process and visualize the result:

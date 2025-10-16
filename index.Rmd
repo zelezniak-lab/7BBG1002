@@ -14,7 +14,14 @@ output:
 
 # Study Material and Exercises
 
-## Tutorial: Sequencing Technologies
+## Tutorial: Working Remotely and Reproducibly, NGS example Tutorial
+
+### Learning Outcomes
+- Develop reproducible computational procedures using R notebooks.
+- Work with conda environments.
+- Run sequence processing software via command-line interfaces.
+- Run wrapper R libraries to manage and execute sequence workflows.
+
 
 [Tutorial](seq_tech/seq_tech_tutorial.html)
 
