@@ -146,11 +146,13 @@ Before proceeding go back to R console and install missing tidyverse package, th
 
 # Exercise 1: Alignment
 
+
+~~~r
 ```{r, setup}
 install.packages(setdiff(c("tidyverse", "geneviewer"), rownames(installed.packages())))
 knitr::opts_chunk$set(engine.opts = "-i")
 ```
-
+~~~
 
 We'll be aligning sequencing data against the reference genome of a Varicella virus.
 
@@ -158,7 +160,7 @@ We'll be aligning sequencing data against the reference genome of a Varicella vi
 
 
 But first lets take a look at the Varicella genome
-
+~~~r
 ```{r, eval=FALSE}
 library(geneviewer)
 
@@ -185,8 +187,7 @@ GC_chart(
             fontSize = "5px",)
             
 ```
-
-
+~~~
 
 
 
