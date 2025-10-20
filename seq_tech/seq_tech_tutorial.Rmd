@@ -59,8 +59,8 @@ wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/se
 Now fetch a copy of the data we will be using:
 
 ```bash
-wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/seq_tech/data.zip 
-unzip data.zip
+wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/seq_tech/data1.zip 
+unzip data1.zip
 ```
 
 To nicely see the contents of (small) directories, you can use
