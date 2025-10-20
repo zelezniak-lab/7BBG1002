@@ -29,6 +29,7 @@ cp /scratch/grp/msc_appbio/ops-rstudio.sh .
 
 ```
 
+
 From you home directory run the following command.
 
 ```bash
