@@ -160,7 +160,6 @@ We'll be aligning sequencing data against the reference genome of a Varicella vi
 
 
 But first lets take a look at the Varicella genome
-~~~r
 ```{r, eval=FALSE}
 library(geneviewer)
 
@@ -187,7 +186,6 @@ GC_chart(
             fontSize = "5px",)
             
 ```
-~~~
 
 
 
