@@ -145,7 +145,6 @@ conda activate sequencing
 conda list
 ```
 
-### Run using  R notebooks.
 
 Run the code chunk below to enable running conda commands from this notebook.
 For future reference, this functionality is achieved with `knitr` package which is a part of `tidyverse`                                                  
@@ -638,9 +637,6 @@ Find also the coverage plot.
 
 
 # Exercise 4: De novo genome assembly
-
-
-(this exercise will not work due to high memory requirements, i.e. exceeding free version of Prosit Cloud, you can do it on your own once you gain access to KCL HPC system)
 
 So far we've been using a reference genome to align reads to it.
 When one is not available, the genome has to be assembled *de novo* from the reads.
