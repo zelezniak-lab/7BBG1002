@@ -21,7 +21,10 @@ output:
 
 # Initial setup: Work environment and Data
 
-Before we begin from you browser open http://129.16.45.154:8787 connect with studentX and password, where is is your designated student number that you will find in KEATS.
+To connect to the terminal use `ssh 129.16.45.154` connect with studentX and password, where is is your designated student number that you will find in KEATS.
+Before we begin from you browser open http://129.16.45.154:8787 login with the same credentials.
+
+
 
 
 The starter notebook contains instructions for setting up your conda
@@ -40,6 +43,8 @@ See instructions [here](../unix/conda_install.html)
 
 ## Directory and data setup
 We will be working in RStudio and primarely writing the commands in this notebook. However, the first commands in this section is easier if you run from the terminal. 
+
+
 
 Please create a directory for this tutorial in your home directory and inside there
 copy the starter notebook from my directory. To do this run the following commands in the terminal after logging on to the server.
