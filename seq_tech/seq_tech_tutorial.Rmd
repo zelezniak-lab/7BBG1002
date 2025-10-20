@@ -21,22 +21,8 @@ output:
 
 # Initial setup: Work environment and Data
 
-Before we begin please, login to CREATE and copy the following script to your home directory.
-The file is a running script to start Rstudio server that you will need to login.
+Before we begin from you browser open http://129.16.45.154:8787 connect with studentX and password, where is is your designated student number that you will find in KEATS.
 
-```bash
-cp /scratch/grp/msc_appbio/ops-rstudio.sh .
-
-```
-
-
-From you home directory run the following command.
-
-```bash
-sbatch ops-rstudio.sh
-```
-
-Follow instructions in slurm output file by reading it using `cat slurm-xxxxxxxx.out` where xxxxxxxx is submitted job id. 
 
 The starter notebook contains instructions for setting up your conda
 environment and R tidyvese package that is needed to interpret R notebooks. 
