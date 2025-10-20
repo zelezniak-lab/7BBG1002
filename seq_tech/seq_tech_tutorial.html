@@ -11,7 +11,7 @@
 
 <meta name="author" content="Aleksej Zelezniak (adapted from Filip Buric (adapted from Rui Pereira’s exercise protocol))" />
 
-<meta name="date" content="2025-10-16" />
+<meta name="date" content="2025-10-20" />
 
 <title>7BBG1002: Working Remotely and Reproducibly, NGS example Tutorial</title>
 
@@ -2766,7 +2766,7 @@ border-radius: 0px;
 Reproducibly, NGS example Tutorial</h1>
 <h4 class="author">Aleksej Zelezniak (adapted from Filip Buric (adapted
 from Rui Pereira’s exercise protocol))</h4>
-<h4 class="date">2025-10-16</h4>
+<h4 class="date">2025-10-20</h4>
 
 </div>
 
@@ -2784,16 +2784,10 @@ workflows.</li>
 </div>
 <div id="initial-setup-work-environment-and-data" class="section level1">
 <h1>Initial setup: Work environment and Data</h1>
-<p>Before we begin please, login to CREATE and copy the following script
-to your home directory. The file is a running script to start Rstudio
-server that you will need to login.</p>
-<pre class="bash"><code>cp /scratch/grp/msc_appbio/ops-rstudio.sh .
-</code></pre>
-<p>From you home directory run the following command.</p>
-<pre class="bash"><code>sbatch ops-rstudio.sh</code></pre>
-<p>Follow instructions in slurm output file by reading it using
-<code>cat slurm-xxxxxxxx.out</code> where xxxxxxxx is submitted job
-id.</p>
+<p>To connect to the terminal use <code>ssh 129.16.45.154</code> connect
+with studentX and password, where is is your designated student number
+that you will find in KEATS. Before we begin from you browser open <a href="http://129.16.45.154:8787" class="uri">http://129.16.45.154:8787</a> login with the same
+credentials.</p>
 <p>The starter notebook contains instructions for setting up your conda
 environment and R tidyvese package that is needed to interpret R
 notebooks. Please follow these instructions, then continue using the
@@ -2881,8 +2875,6 @@ conda install samtools bowtie2 breseq abyss bcftools wgsim emboss tree -y</code>
 <p>Lets inspect the packages that we just installed.</p>
 <pre class="bash"><code>conda activate sequencing
 conda list</code></pre>
-<div id="run-using-r-notebooks." class="section level3">
-<h3>Run using R notebooks.</h3>
 <p>Run the code chunk below to enable running conda commands from this
 notebook. For future reference, this functionality is achieved with
 <code>knitr</code> package which is a part of
@@ -2891,7 +2883,6 @@ notebook. For future reference, this functionality is achieved with
 <p>Before proceeding go back to R console and install missing tidyverse
 package, this is needed to Run notebooks, i.e. by default knitr might be
 missing.</p>
-</div>
 </div>
 </div>
 <div id="exercise-1-alignment" class="section level1">
@@ -3326,9 +3317,6 @@ plot.</p>
 </div>
 <div id="exercise-4-de-novo-genome-assembly" class="section level1">
 <h1>Exercise 4: De novo genome assembly</h1>
-<p>(this exercise will not work due to high memory requirements,
-i.e. exceeding free version of Prosit Cloud, you can do it on your own
-once you gain access to KCL HPC system)</p>
 <p>So far we’ve been using a reference genome to align reads to it. When
 one is not available, the genome has to be assembled <em>de novo</em>
 from the reads. Here, we’ll be using the <code>abyss</code> assembler
