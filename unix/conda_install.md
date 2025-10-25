@@ -35,7 +35,6 @@ The dot means "this directory" since Unix ignores the current directory by defau
 ```
 
 
-
 The installation is interactive:
 
 - It will ask you to read and accept a license agreement.
