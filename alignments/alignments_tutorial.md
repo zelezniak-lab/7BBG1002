@@ -41,7 +41,7 @@ This tutorial is designed to get hands-on experience with two powerful sequence 
     -   Navigate to your scratch space
 
         ``` sh
-        /scratch/users/kYOURNUMBER/
+        cd /scratch/users/kYOURNUMBER/
         ```
 
     -   Using Conda to install BLAST and HMMER:
@@ -55,9 +55,6 @@ This tutorial is designed to get hands-on experience with two powerful sequence 
         conda install -c bioconda blast hmmer seqtk mafft alv
         ```
 
-    -   If you don't have conda, you need to first install conda.
-        See instructions [here](../unix/conda_install.html)
-
 2.  **Prepare Your Workspace**:
 
     -   Create a new directory to store the files for this tutorial:
@@ -70,42 +67,36 @@ This tutorial is designed to get hands-on experience with two powerful sequence 
 ### 2. Building a BLAST Database
 
 Before running a BLAST search, it's important to have a database against which to compare your query sequence.
-In this section, we will build a local BLAST database using Uniref50 sequences, see [Uniref documentation](https://www.uniprot.org/help/uniref).
+In this section, we will build a local BLAST database using Swiss-Prot sequences, see [documentation](https://www.uniprot.org/uniprotkb).
 The sequences were downloaded for you but you can access them [here](https://www.uniprot.org/help/downloads).
 
 1.  **Obtain Sequences for the Database**:
 
+    
     -   For this example, let's look a FASTA file named `uniref50.fasta`:
-
+    
         ``` sh
-        less /scratch/grp/msc_appbio/alignments/uniref50.fasta 
+        less /scratch/grp/msc_appbio/alignments/uniprot_sprot.fasta 
         ```
 
     -   Q: How many sequences are in the database?
-        Answer: <font color="white"> 66527032 </font>
+        Answer: <font color="white"> 573661 </font>
 
 2.  **Building the BLAST Database**:
 
     -   The following the `makeblastdb` command creates a BLAST database from the FASTA file.
-        **Please don't run it**, it takes about 20 min to process all sequences but it will probably kill the cluster's filesystem if everyone will start running the job as the job is highly depending on I/O operations.
-
+        
         ``` sh
-        #makeblastdb -in /scratch/grp/msc_appbio/alignments/uniref50.fasta -dbtype prot -out uniref50_db
+        makeblastdb -in /scratch/grp/msc_appbio/alignments/uniprot_sprot.fasta -dbtype prot -out uniprot_sprot_db
         ```
 
     -   **Options Explained**:
 
-        -   `-in /scratch/grp/msc_appbio/alignments/uniref50.fasta`: The input FASTA file.
+        -   `-in /scratch/grp/msc_appbio/alignments/uniprot_sprot.fasta`: The input FASTA file.
         -   `-dbtype prot`: Specifies that the database is protein sequences.
-        -   `-out uniref50_db`: The name of the output database.
+        -   `-out uniprot_sprot_db`: The name of the output database.
 
-        To save time, I've already created database for you, instead copy it to your folder and unpack it:
-
-        ``` sh
-        cp /scratch/grp/msc_appbio/alignments/uniref50_db.tar .
-        tar xvf uniref50_db.tar 
-        ```
-
+        
 ### 3. Running BLAST from the Command Line
 
 BLAST is commonly used to identify sequences that are similar to a query sequence in a database.
@@ -120,7 +111,7 @@ In this section, we will conduct a BLAST search using a protein query sequence.
         nano query.fasta
         ```
 
-    -   Paste the following sequence (this is PETase from Ideonella sakaiensis, Yoshida et al 2016, Science):
+    -   Paste the following sequence (this is PETase from Ideonella sakaiensis, Yoshida et al 2016, Science), write to file (control + W) and exit nano:
 
         ```         
         >A0A0K8P8E7
@@ -140,13 +131,13 @@ In this section, we will conduct a BLAST search using a protein query sequence.
     -   Use the BLASTP program to search against the custom database we just created:
 
         ``` sh
-        blastp -query query.fasta -db uniref50_db -out blast_results.txt -evalue 1e-5 -outfmt 6
+        blastp -query query.fasta -db uniprot_sprot_db -out blast_results.txt -evalue 1e-5 -outfmt 6
         ```
 
     -   **Options Explained**:
 
         -   `-query query.fasta`: The query sequence file.
-        -   `-db uniref50_db`: The uniref50_db database to search against.
+        -   `-db uniprot_sprot_db`: The uniprot_sprot_db database to search against.
         -   `-out blast_results.txt`: Output file for the results.
         -   `-evalue 1e-5`: Set the E-value threshold for reporting matches.
         -   `-outfmt 6`: Output in tabular format (easy to parse).
@@ -167,7 +158,7 @@ In this section, we will conduct a BLAST search using a protein query sequence.
     -   Extract significant hits with E-value \< 1e-6 a and identity \>40%
 
         ``` sh
-        awk '$3 > 40 && $11 < 1e-6' blast_results.txt > significant_blast_hits.txt
+        awk '$11 < 1e-6' blast_results.txt > significant_blast_hits.txt
         ```
 
 ### 4. Running HMMER from the Command Line
@@ -187,13 +178,13 @@ It is particularly useful for finding more remote homologs compared to BLAST.
         ```
         Then filter out from huge database file
         ``` sh
-        seqtk subseq /scratch/grp/msc_appbio/alignments/uniref50.fasta significant_blast_hits.ids > blast_hits.fasta
+        seqtk subseq /scratch/grp/msc_appbio/alignments/uniprot_sprot.fasta significant_blast_hits.ids > blast_hits.fasta
         ```
 
     -   Now let's aligned the extracted sequences, using [MAFFT](https://mafft.cbrc.jp/alignment/software/).
 
         ``` sh
-        mafft  blast_hits.fasta > hits_alignment.fasta
+        mafft  blast_hits.fasta > alignment.fasta
         ```
 
     -   You can use to alignemnt viewer tools like [Jalview](https://www.jalview.org/) to visualise the alignments.
@@ -269,6 +260,4 @@ BLAST is fast and efficient for detecting close homologs, while HMMER excels at 
 3.  Build a custom BLAST database with more sequences and test how the database size affects the search results.
 
 Feel free to reach out with any questions or if you need further guidance on the exercises!
-
-
 
