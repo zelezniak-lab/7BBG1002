@@ -1,15 +1,28 @@
 ---
 title: "7BB1002 Course page"
 date: "`r Sys.Date()`"
-theme: "simplex"
-output:
-  html_document:
-    number_sections: false
-    toc: true
-    toc_float: true
-    toc_depth: 3
-    df_print: paged
-  pdf_document: default
+
+format:
+    html:
+        theme: sandstone
+        code-fold: false
+        highlight: pygment
+        toc-depth: 3
+        toc: true
+        toc-title: Contents
+        self-contained: true
+        page-break-after: always
+        css: styles.css
+        # page-layout: full
+code-block-bg: true
+code-block-border-left: "#31BAE9"
+# fig-cap-location: margin
+# tbl-cap-location: margin
+fig-align: center
+title-block-banner: "darkcyan"
+title-block-banner-color: "white"
+execute:
+echo: true
 ---
 
 # Study Material and Exercises
