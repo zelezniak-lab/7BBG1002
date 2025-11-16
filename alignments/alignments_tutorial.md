@@ -73,7 +73,7 @@ The sequences were downloaded for you but you can access them [here](https://www
 1.  **Obtain Sequences for the Database**:
 
     
-    -   For this example, let's look a FASTA file named `uniref50.fasta`:
+    -   For this example, let's look a FASTA file named `uniprot_sprot.fasta`:
     
         ``` sh
         less /scratch/grp/msc_appbio/alignments/uniprot_sprot.fasta 
