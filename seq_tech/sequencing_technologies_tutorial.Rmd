@@ -14,43 +14,58 @@ output:
 # Learning Outcomes
 
 - Develop reproducible computational procedures using R notebooks.
-- Work with conda environments.
+- Work with Conda environments.
 - Run sequence processing software via command-line interfaces.
 - Run wrapper R libraries to manage and execute sequence workflows.
 
+---
 
-# Initial setup: Work environment and Data
+## ⚠️ IMPORTANT NOTICE
+> **PLEASE READ THE TEXT AND INSTRUCTIONS CAREFULLY — DO NOT JUST BLINDLY COPY-PASTE COMMANDS.**  
+> Each command has a purpose. Understanding *why* you are running it is part of learning reproducible research.
 
-The starter notebook contains instructions for setting up your conda
-environment and R tidyvese package that is needed to interpret R notebooks. 
-Please follow these instructions, then continue using
-the notebook to write the commands used here and take notes for the exercises.
-You can also download a copy from [here](sequencing_technologies_tutorial.Rmd) for your own computer.
+---
 
-The notebook that will serve as both a rudimentary pipeline and final (reproducible) report.
+
+---
+
+## ⚠️ IMPORTANT NOTICE
+> **First login to CREATE HPC.**
+> You first need to run R studio from HPC, alternatively the notebook should be working on any machine running R studio with `tidyverse` package. 
+> To run R studio from HPC follow **[here](../create/rstudio_create.html)** 
+
+---
+
+# Initial setup: Work environment and data
+
+The starter notebook contains instructions for setting up your Conda environment. If you haven’t installed Conda, see the installation instructions: **[here](../unix/conda_install.html)**
+
+You can also download a copy from **[sequencing_technologies_tutorial.Rmd](sequencing_technologies_tutorial.Rmd)** for your own computer.
+The notebook will serve as both a simple pipeline and a final (reproducible) report, you will also use it for your exercies. 
 
 ![](img/notebooks.png)
 
 
-If you have not done so already, you need to first install conda.
-See instructions [here](../unix/conda_install.html)
+
+---
 
 ## Directory and data setup
-We will be working in RStudio and primarely writing the commands in this notebook. However, the first commands in this section is easier if you run from the terminal. 
 
-Please create a directory for this tutorial in your home directory and inside there
-copy the starter notebook from my directory. To do this run the following commands in the terminal after logging on to the server.
 
-```bash
+We will work in **RStudio**, writing most commands in this notebook. The first few steps are easier from the **terminal**, so we stick with it for now.
+
+**Create a project folder and fetch the starter notebook**
+
+
+```{bash, eval=FALSE}
 mkdir NGS_Tutorial
 cd NGS_Tutorial
 wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/seq_tech/sequencing_technologies_tutorial.Rmd 
 
 ```
-
 Now fetch a copy of the data we will be using:
 
-```bash
+```{bash, eval=FALSE}
 wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/seq_tech/data.zip 
 unzip data.zip
 ```
@@ -58,7 +73,7 @@ unzip data.zip
 To nicely see the contents of (small) directories, you can use
 the `tree` program, but you need to install it first (`conda install -c conda-forge tree`)
 
-```bash
+```{bash, eval=FALSE}
 tree data
 ```
 
@@ -68,19 +83,18 @@ To make sure this data is protected from accidental writes,
 remove the write permission (`-w`) for anyone on the server (`ugo`) 
 on it by running:
 
-```bash
+```{bash, eval=FALSE}
 find data -type f -print0 | xargs -0 chmod ugo-w
 ```
 
 Then create results directory
 
-```bash
+```{bash, eval=FALSE}
 mkdir results
 ```
 
 
 ## Work environment 
-
 
 It's standard practice to create a new conda environment for each project.
 This is because each project may require a number of different software packages,
@@ -92,9 +106,8 @@ an can be traumatizing.
 Conda can fetch packages from many different sources (aka "channels")
 Let's add the Bioconda channel, as well as the general-purpose conda-forge.
 ("defaults" is given first to give it top priority when searching for packages)
+Run this in your terminal.
 
-Ignore the errors about " Inappropriate ioctl for device" 
-and "no job control in this shell". They're a harmless consequence of this.
 
 ```{bash, eval=FALSE}
 conda config --add channels defaults
@@ -103,11 +116,16 @@ conda config --add channels conda-forge
 ```
 
 Create and activate a new environment for this exercise. 
-The conda create command create new environments, the option --name specifies the name of your new environment and the option -y lets conda know that you answer yes to all prompts. Without -y you will have to manually type in yes when prompted.
-The command conda activate activates the environment within the current code chunk **and only the current code chunk**. Which means that within every code chunk that we want to use our environment we need to first run conda activate <environment_name>. 
+The conda create command create new environments, the option --name specifies the name of your new environment and the option -y lets conda know that you answer yes to all prompts. Without -y you will have to manually type in yes when prompted. When you running it first time, you need to run it interactively as it require to accept terms of licence, please  accept (a) the licence (Enter a), answer [yes] to all promts. 
 
 ```{bash, eval=FALSE}
 conda create --name sequencing -y
+#conda create --name sequencing
+```
+
+Now activate sequencing. 
+
+```{bash, eval=FALSE}
 source ~/.bashrc 
 conda activate sequencing
 ```
@@ -117,7 +135,9 @@ Now install the software needed for this exercise. We want to install the softwa
 The command conda install will install the packages that you specify to it. You can specify multiple packages at a time by separating them with spaces. This step will also ask for confirmation if we do not specify the -y option. 
 Later on / in real life, it's good to to examine what changes are made when installing new packages. You can easily view all the packages installed in an environment by running conda list once activated. 
 
-**Make sure you activated the `sequencing` environment!**
+**Make sure you activated the `sequencing` environment!**. 
+
+We activate the `sequencing` environment repetitively multiple times as many of you often jump over and run random chunk of code and that then miss something, it is not necessary to activate all the time in the terminal environment, but is good to do if when you are teaching in the class to be prone to multiple students requests. 
 
 ```{bash, eval=FALSE}
 conda activate sequencing
@@ -130,13 +150,11 @@ conda list
 ```
 
 
-
-### Run using  R notebooks.
-
 Run the code chunk below to enable running conda commands from this notebook.
 For future reference, this functionality is achieved with `knitr` package which is a part of `tidyverse`                                                  
 [knitr](https://yihui.org/knitr/options/) package.
 
-Before proceeding go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by default knitr might be missing.
+Before proceeding go back to R console and install missing tidyverse package, this is needed to Run notebooks, i.e. by default knitr or markdown might be missing, R studio might ask you to install it, just install it. 
 
 # Exercise 1: Alignment
+
