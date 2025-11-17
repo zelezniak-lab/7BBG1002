@@ -52,7 +52,8 @@ This tutorial is designed to get hands-on experience with two powerful sequence 
         conda init bash 
         source ~/.bashrc
         conda activate alignments
-        conda install -c bioconda blast hmmer seqtk mafft alv
+        conda install -c bioconda blast hmmer seqtk mafft alv #make sure you specify version of blast as databases incompatible..
+        ###change to mamba next time due to slowness
         ```
 
 2.  **Prepare Your Workspace**:
