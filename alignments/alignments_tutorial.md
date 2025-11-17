@@ -35,7 +35,7 @@ This tutorial is designed to get hands-on experience with two powerful sequence 
     -   Please login to the CREATE note
 
         ``` sh
-        srun -p cpu --time=03:00:00 --pty /bin/bash # use your assigned partition instead of cpu
+        srun -p msc_appbio --time=03:00:00 --pty /bin/bash # use your assigned partition instead of cpu
         ```
 
     -   Navigate to your scratch space
