@@ -1,173 +1,59 @@
 ---
-title: "7BB1002 Course page"
-date: "`r Sys.Date()`"
+title: "7BBG1002: Applied Bioinformatics and Cloud Computing"
+output:
+  html_document:
+    theme: flatly
+    #self_contained: true
+    embed-resources: true
+    highlight-style: pygments
+    toc: true
+    toc-depth: 3
+    toc-title: Contents
+    code-copy: false
 
-format:
-    html:
-        theme: sandstone
-        code-fold: false
-        highlight: pygment
-        toc-depth: 3
-        toc: true
-        toc-title: Contents
-        self-contained: true
-        page-break-after: always
-        css: styles.css
-        # page-layout: full
-code-block-bg: true
-code-block-border-left: "#31BAE9"
-# fig-cap-location: margin
-# tbl-cap-location: margin
-fig-align: center
-title-block-banner: "darkcyan"
-title-block-banner-color: "white"
-execute:
-  echo: true
 ---
 
-# Study Material and Exercises
+# About the course
 
-## Tutorial: Reproducible research with R
-[Tutorial](rres/rresearch.html)
+This course introduces practical approaches to analysing biological data using
+R, command-line tools and remote computing. You will learn to organise your
+work, run bioinformatics analyses and explain your results in reproducible reports.
 
-## Tutorial: Sequencing Technologies
-[Tutorial](seq_tech/seq_tech_tutorial.html)
+# Before you start
 
-## Tutorial: Alignments - BLAST and HMMER
-[Tutorial](alignments/alignments_tutorial.html)
+- Follow the course instructions for connecting to CREATE and opening RStudio.
+- Keep your files in a dedicated folder for each practical.
+- Read each tutorial step before running its commands.
+- Use the course announcements for session details, deadlines and submission instructions.
 
-<!-- ## Tutorial: Unix -->
+# Tutorials
 
-<!-- **Preliminaries** -->
+## Reproducible research with R
 
-<!-- * If you are a Windows user download and install [Git-Bash](https://gitforwindows.org) -->
+Organise your analysis and combine code, results and explanations in a notebook.
 
-<!-- * Please read this **first**: [How to connect to remote accounts](remote-hosts) -->
+[Open the tutorial](rres/rresearch.html)
 
-<!-- * [Conda installation instructions](unix/conda_install) -->
+## Sequencing technologies
 
-<!-- **Exercises** -->
+Work with sequence data, run analysis tools and interpret their outputs.
 
-<!-- * [Basic Unix operations for bioinformatics](unix-tasks) -->
+[Open the tutorial](seq_tech/seq_tech_tutorial.html)
 
-<!-- **Reading** -->
+## Alignments: BLAST and HMMER
 
-<!-- * [Intro slides](unix-intro.pdf) -->
+Explore sequence similarity and use search results to investigate biological questions.
 
-<!-- **Recommended Reading** -->
+[Open the tutorial](alignments/alignments_tutorial.html)
 
-<!-- * [The Unix Shell](https://swcarpentry.github.io/shell-novice/) tutorial from the Software Carpentry Foundation -->
+# Working through the practicals
 
-<!-- * Unix commands cheat sheets: -->
+1. Run the steps in order and check the output at each stage.
+2. Record your commands and answer the questions in your own words.
+3. Save your work regularly. If a command fails, keep the error message and ask for help.
+4. Complete any self-study tasks specified in the tutorial.
 
-<!--   * https://www.git-tower.com/blog/command-line-cheat-sheet/ -->
+---
 
-<!--   * http://cheatsheetworld.com/programming/unix-linux-cheat-sheet/ -->
-
-<!-- * [Unix philosophy](unix-philosophy) -->
-
-<!-- * [Regular expression learning resources](regex) -->
-
-<!-- <hr /> -->
-
-<!-- ## Tutorial: Git -->
-
-<!-- **Preliminaries** -->
-
-<!-- * [Set up a github account](Git/github_account) -->
-
-<!-- * [Set up a ssh key on the server](Git/github_SSH_key) -->
-
-<!-- **Exercises** -->
-
-<!-- * [Exercise 1](git-exercise-1) -->
-
-<!-- * [Exercise 2](git-exercise-2) -->
-
-<!-- * (Optional: [Exercise 3](git-exercise-3))  Suggested instead to read about [uploading your repos to GitHub](https://help.github.com/en/github/importing-your-projects-to-github/adding-an-existing-project-to-github-using-the-command-line) -->
-
-<!-- * [GitHub Homework](Git/github_for_homework) -->
-
-<!-- **Reading** -->
-
-<!-- * [Slides](git-tutorial-chalmers.pdf) -->
-
-<!-- **Recommended Reading** -->
-
-<!-- * [Git Cheat Sheet (PDF)](https://github.github.com/training-kit/downloads/github-git-cheat-sheet.pdf) -->
-
-<!-- <hr /> -->
-
-<!-- <hr /> -->
-
-<!-- ## Tutorial: Intro to R programming for data analysis -->
-
-<!-- [Self-study notebook](r_for_data_analysis/intro_r_data_analysis.html) -->
-
-<!-- **Reading** -->
-
-<!-- A selection of small chapters and sections that explain concepts we cover in the course: -->
-
-<!-- * *R for Data Science*  (the whole book is great and even covers basic R) -->
-
-<!--   - Section 1. [Intro](https://r4ds.had.co.nz/introduction.html) (if the tidyverse context or applications are not clear) -->
-
-<!--   - Section 4. [Workflow: basics](https://r4ds.had.co.nz/workflow-basics.html) (good tips for working with code) -->
-
-<!--   - Section 5. [Data Transformations](https://r4ds.had.co.nz/transform.html) -->
-
-<!--   - Section 18. [Pipes](https://r4ds.had.co.nz/pipes.html)  (about the `%>%` operator) -->
-
-<!--   - Section 19. [Functions](https://r4ds.had.co.nz/functions.html#functions)  (you can skip the last section about environments) -->
-
-<!-- * *Advanced R* -->
-
-<!--   - Section 4. [Subsetting](https://adv-r.hadley.nz/subsetting.html)  (different ways to access elements in R data structures) -->
-
-<!-- * *Misc* -->
-
-<!--   - [Table manipulation (aka data wrangling) cheat sheet](https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf) -->
-
-<!--   - [Quick overview of Biostrings functionality](https://bioconductor.org/packages/release/bioc/vignettes/Biostrings/inst/doc/BiostringsQuickOverview.pdf) -->
-
-<!--   - [Simple examples of working with Biostrings](https://web.stanford.edu/class/bios221/labs/biostrings/lab_1_biostrings.html) -->
-
-<!-- **Recommended Reading** -->
-
-<!-- * [Strategies for Reproducible R Environments](https://environments.rstudio.com/) -->
-
-<!-- * [R for Data Science](https://r4ds.had.co.nz) -->
-
-<!-- * [Advanced R](https://adv-r.hadley.nz)  -->
-
-<!-- <hr /> -->
-
-<!-- ## Tutorial: Single Cell Analysis -->
-
-<!-- [Exercise](single_cell/sc_analysis.html) -->
-
-<!-- <hr /> -->
-
-<!-- ## Tutorial: Introduction to Algorithmic Thinking -->
-
-<!-- [Self-study notebook](intro_to_algos/intro_to_algos.html) -->
-
-<!-- <hr /> -->
-
-<!-- ## Tutorial: Gene annotation -->
-
-<!-- * [Exercise 1](gene-prediction-exercise) -->
-
-<!-- <hr /> -->
-
-<!-- # Practical info for projects  -->
-
-<!-- * [How to install your own software on the server](installing_software_on_the_server) -->
-
-<hr />
-
-<footer style="font-size:0.8em">
-
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> <img src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" alt="Creative Commons License" style="border-width:0"/> </a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
-
-</footer>
+These materials are licensed under
+[Creative Commons Attribution–ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
