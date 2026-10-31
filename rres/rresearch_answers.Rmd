@@ -1,0 +1,431 @@
+---
+title: "7BBG1002: yeast sequence example, answers for teachers"
+author: Aleksej Zelezniak
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+---
+
+**For teachers only. Do not share with students.**
+
+This document runs the whole practical from the raw data and answers
+every question of `rresearch_tutorial.Rmd`, including the homework.
+Knit it in the `yeast_project` folder (with `data/yeast_cds.fa.gz` and
+`data/yeast_genome.fa.gz`) in RStudio, after the `yeast-tools` Conda
+environment with SeqKit has been created. All numbers below come from
+Ensembl R64-1-1 (*S. cerevisiae*), the files the students download.
+
+```{r setup, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+# Same line as in the student notebook: lets bash chunks find seqkit
+Sys.setenv(PATH = paste(path.expand("~/.conda/envs/yeast-tools/bin"),
+                        Sys.getenv("PATH"), sep = ":"))
+dir.create("results", showWarnings = FALSE)
+```
+
+# Exercise 1: Inspect the sequences
+
+> How many sequence records are there? Why would counting all the lines
+> give a different answer?
+
+```{bash}
+# Records: one header line (starting with >) per sequence
+zcat data/yeast_cds.fa.gz | grep -c '^>'
+# All lines: headers + sequence lines (each sequence is wrapped over many lines)
+zcat data/yeast_cds.fa.gz | wc -l
+```
+
+**Answer.** 6,600 records. Counting all lines gives 155,818, because the
+sequence of each record is spread over many lines; only the header
+starts with `>`.
+
+*Common mistake:* `grep -c '>'` without `^` gives the same number here,
+but would also count a `>` anywhere in a line.
+
+# Exercise 2: Process the sequences with SeqKit
+
+`-a` adds extra columns (quartiles, N50, GC) to the standard summary;
+the students run it without `-a`, which already gives min, average and
+max length.
+
+```{bash}
+seqkit stats -a data/yeast_cds.fa.gz data/yeast_genome.fa.gz 2>/dev/null
+```
+
+The gene table, exactly as in the tutorial:
+
+```{bash}
+zcat data/yeast_cds.fa.gz | grep '>' > results/cds_headers.txt
+cut -d ' ' -f 1,3 results/cds_headers.txt | sed -e 's/>//' -e 's/_mRNA//' -e 's/chromosome:R64-1-1://' -e 's/[ :]/\t/g' > results/positions.tsv
+seqkit fx2tab -n -i -l data/yeast_cds.fa.gz > results/lengths.tsv
+printf 'record_id\tchromosome\tstart\tend\tstrand\tlength_bp\n' > results/yeast_cds.tsv
+paste results/positions.tsv results/lengths.tsv | cut -f 1-5,7 >> results/yeast_cds.tsv
+head -n 3 results/yeast_cds.tsv
+```
+
+The same table with SeqKit only, and a check that both are identical:
+
+```{bash}
+printf 'record_id\tchromosome\tstart\tend\tstrand\tlength_bp\n' > results/yeast_cds_seqkit.tsv
+seqkit replace -p '_mRNA cds chromosome:R64-1-1:(\S+) .*' -r ' $1' data/yeast_cds.fa.gz | seqkit fx2tab -n -l | tr ' :' '\t\t' >> results/yeast_cds_seqkit.tsv
+diff results/yeast_cds.tsv results/yeast_cds_seqkit.tsv && echo "Both tables are the same"
+```
+
+The chromosome table:
+
+```{bash}
+printf 'chromosome\tchromosome_bp\n' > results/chromosomes.tsv
+zcat data/yeast_genome.fa.gz | grep '>' | cut -d ':' -f 4,6 | sed 's/:/\t/' >> results/chromosomes.tsv
+cat results/chromosomes.tsv
+```
+
+Header lengths next to the lengths counted by SeqKit. `diff` prints
+nothing if they agree:
+
+```{bash}
+tail -n +2 results/chromosomes.tsv > results/header_lengths.tsv
+seqkit fx2tab -n -i -l data/yeast_genome.fa.gz | diff results/header_lengths.tsv - && echo "Header lengths agree with SeqKit"
+```
+
+> How many genes and how many chromosomes are there? What are the
+> shortest, longest and average CDS lengths? One "chromosome" is called
+> `Mito`: what is it?
+
+**Answer.** 6,600 genes (protein-coding CDS) on 17 sequences: 16 nuclear
+chromosomes (I–XVI) and `Mito`. CDS length: shortest 51 bp, longest
+14,733 bp, average 1,327.6 bp. `Mito` is the **mitochondrial genome**
+(85,779 bp, 28 CDS), a separate small circular genome inside the
+mitochondria.
+
+> Do the chromosome lengths in the headers agree with the lengths counted
+> by SeqKit? Why is it worth checking?
+
+**Answer.** Yes, all 17 agree. A header is just text written by someone;
+the sequence is the actual data. Checking catches truncated or corrupted
+downloads, edited or wrong headers, or a mix-up between genome versions.
+General lesson: verify metadata against the data whenever it is cheap.
+
+# Exercise 3: Genes and chromosomes in R
+
+```{r}
+genes <- read_tsv("results/yeast_cds.tsv", show_col_types = FALSE)
+nrow(genes)   # 6,600: same as the record count in Exercise 1
+
+genes_summary <- genes %>%
+  summarise(genes = n(),
+            mean_length = mean(length_bp),
+            median_length = median(length_bp))
+genes_summary
+write_tsv(genes_summary, "results/summary.tsv")
+
+chromosomes <- read_tsv("results/chromosomes.tsv", show_col_types = FALSE) %>%
+  left_join(count(genes, chromosome, name = "genes"), by = "chromosome") %>%
+  mutate(genes_per_100kb = genes / chromosome_bp * 100000)
+write_tsv(chromosomes, "results/chromosomes_genes.tsv")
+```
+
+> Are mean and median CDS length similar? What could explain a
+> difference?
+
+```{r}
+summary(genes$length_bp)
+```
+
+**Answer.** Mean 1,328 bp, median 1,062 bp. The distribution is skewed
+to the right (see the histogram in Exercise 5): a few very long genes
+pull the mean up, while the median is robust to them.
+
+> For most genes, `end - start + 1` equals `length_bp`, but not for all.
+> Use `filter()` to find the genes where they differ. How many are there,
+> and why is the gene longer on the chromosome than its CDS?
+
+```{r}
+spliced <- genes %>%
+  filter(end - start + 1 != length_bp) %>%
+  mutate(intron_bp = end - start + 1 - length_bp)   # extra length on the chromosome
+nrow(spliced)
+count(spliced, nuclear = chromosome != "Mito")
+spliced %>% arrange(desc(intron_bp)) %>% head()
+```
+
+**Answer.** 287 genes. The CDS contains only the coding exons; the
+chromosome coordinates span the whole gene, including the **introns**
+that are spliced out. 276 are nuclear genes (only ~5% of yeast genes
+have introns, usually one short one) and 11 are mitochondrial; the
+largest differences are mitochondrial genes such as COX1 (Q0045), which
+has many long introns. `end - start + 1` is never smaller than
+`length_bp`.
+
+> Which chromosome has the most genes? Is it also the longest? Which
+> chromosome has the highest and which the lowest gene density?
+
+```{r}
+chromosomes %>% arrange(desc(genes))
+chromosomes %>% arrange(desc(genes_per_100kb))
+```
+
+**Answer.** Chromosome IV has the most genes (836) and is also the
+longest (1.53 Mb). Highest density: III (58.1 genes per 100 kb). Lowest:
+`Mito` (32.6); among the nuclear chromosomes, I (50.8). The nuclear
+chromosomes are all very similar (51–58 per 100 kb).
+
+> Change the example above to list the genes on `Mito`, from longest to
+> shortest.
+
+```{r}
+genes %>%
+  filter(chromosome == "Mito") %>%
+  arrange(desc(length_bp))
+```
+
+**Answer.** 28 genes; the longest is Q0055 (2,565 bp). Note several
+genes share the start 13818: these are COX1 and the intron-encoded ORFs
+(AI1–AI5) that start in COX1 exons.
+
+# Exercise 4: Strands, gaps and overlaps
+
+```{r}
+count(genes, strand)
+
+neighbours <- genes %>%
+  arrange(chromosome, start) %>%
+  group_by(chromosome) %>%
+  mutate(left_neighbour = lag(record_id),   # added for the homework
+         gap_bp = start - lag(end) - 1,
+         orientation = case_when(lag(strand) == strand ~ "tandem",
+                                 lag(strand) == -1 ~ "divergent",
+                                 lag(strand) == 1 ~ "convergent")) %>%
+  ungroup() %>%
+  filter(!is.na(gap_bp))
+
+orientation_summary <- neighbours %>%
+  group_by(orientation) %>%
+  summarise(pairs = n(),
+            median_gap = median(gap_bp),
+            overlapping = sum(gap_bp < 0))
+orientation_summary
+write_tsv(orientation_summary, "results/orientations.tsv")
+sum(neighbours$gap_bp < 0)
+```
+
+> Are genes spread evenly over the two strands?
+
+**Answer.** Yes, almost evenly: 3,331 on the + strand, 3,269 on the −
+strand (50.5% vs 49.5%).
+
+> How many neighbouring genes overlap in total? Are overlapping genes
+> mostly on the same strand or on opposite strands?
+
+**Answer.** 646 pairs overlap. Most are on opposite strands
+(229 convergent + 302 divergent = 531); only 115 tandem pairs (same
+strand) overlap. Many overlaps are small ORFs (e.g. dubious ORFs, `-A`
+and `-B` genes) inside or across a larger gene.
+
+> Which orientation has the longest gaps and which the shortest? Use the
+> second scheme to explain why.
+
+**Answer.** Shortest: convergent (median 206 bp). Longest: tandem
+(380 bp) and divergent (379 bp), about the same here, because divergent
+pairs overlap most often (302 negative gaps) and that pulls their median
+down. Without overlaps divergent is clearly longest (Exercise 5). A convergent gap holds
+only the two 3′ ends (terminators), no promoter. A tandem gap holds the
+promoter of one gene, and a divergent gap holds the promoters of both
+genes (often a shared bidirectional promoter), so they need more space.
+*Accept "divergent" as the longest, as long as the explanation uses
+promoters.*
+
+# Exercise 5: Make figures with ggplot2
+
+```{r}
+p_length <- ggplot(genes, aes(x = length_bp)) +
+  geom_histogram(bins = 40, fill = "steelblue", colour = "white") +
+  labs(x = "CDS length (bp)", y = "Number of genes") +
+  theme_minimal()
+p_length
+
+p_chrom <- ggplot(chromosomes, aes(x = chromosome_bp / 1000000, y = genes,
+                                   label = chromosome)) +
+  geom_point() +
+  geom_text_repel() +
+  labs(x = "Chromosome length (Mb)", y = "Number of genes") +
+  theme_minimal()
+p_chrom
+
+p_gaps <- ggplot(neighbours, aes(x = gap_bp)) +
+  geom_histogram(binwidth = 50, fill = "steelblue", colour = "white") +
+  geom_vline(xintercept = 0, colour = "red") +
+  coord_cartesian(xlim = c(-1000, 3000)) +
+  labs(x = "Gap between neighbouring genes (bp)", y = "Number of gene pairs") +
+  theme_minimal()
+p_gaps
+
+p_orient <- ggplot(filter(neighbours, gap_bp > 0),
+                   aes(x = orientation, y = gap_bp, fill = orientation)) +
+  geom_boxplot(outlier.alpha = 0.2) +
+  scale_y_log10() +
+  labs(x = NULL, y = "Gap between neighbouring genes (bp)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+p_orient
+```
+
+> What relationship do you see between chromosome length and number of
+> genes? Roughly how many genes are there per 100 kb? Which point does
+> not follow the pattern, and why might that be?
+
+```{r}
+# Slope of the line through the nuclear chromosomes, as genes per 100 kb
+fit <- lm(genes ~ chromosome_bp, data = filter(chromosomes, chromosome != "Mito"))
+coef(fit)["chromosome_bp"] * 100000
+# Overall density
+sum(chromosomes$genes) / sum(chromosomes$chromosome_bp) * 100000
+```
+
+**Answer.** An almost perfectly linear relationship: longer chromosomes
+have proportionally more genes, about 54 genes per 100 kb (one gene
+every ~1.8 kb). `Mito` lies below the line (32.6 per 100 kb): the
+mitochondrial genome is a separate genome with its own organisation,
+long introns, rRNA/tRNA genes (not in the CDS file) and long AT-rich
+non-coding regions. (Students may say "it is too small to see" - point
+them to the density table.)
+
+> Make a bar plot of the gene density of each chromosome with
+> `geom_col()` (x = `chromosome`, y = `genes_per_100kb`), and save it
+> under a different file name.
+
+```{r}
+p_density <- ggplot(chromosomes, aes(x = chromosome, y = genes_per_100kb)) +
+  geom_col(fill = "steelblue") +
+  labs(x = "Chromosome", y = "Genes per 100 kb") +
+  theme_minimal()
+p_density
+ggsave("results/gene_density.png", p_density, width = 8, height = 5)
+```
+
+*Optional improvement:* chromosomes are sorted alphabetically
+(I, II, III, IV, IX, ...). `aes(x = factor(chromosome, levels = chromosomes$chromosome), ...)`
+keeps the file order.
+
+> What is the most common gap size? Does the boxplot agree with your
+> answer about orientations in Exercise 4?
+
+```{r}
+# Most common 50-bp bins of the gap histogram
+neighbours %>%
+  count(gap_bin = floor(gap_bp / 50) * 50) %>%
+  arrange(desc(n)) %>%
+  head(3)
+```
+
+**Answer.** Around 200–300 bp (the highest bar is 250–300 bp): yeast
+genes are packed closely with short intergenic regions. Yes: the
+convergent box is clearly lowest, divergent and tandem higher, as in
+the medians from Exercise 4, and more clearly: without overlapping
+pairs the order is convergent < tandem < divergent (medians below), i.e.
+no promoter < one promoter < two promoters.
+
+```{r}
+neighbours %>%
+  filter(gap_bp > 0) %>%
+  group_by(orientation) %>%
+  summarise(median_gap = median(gap_bp))
+```
+
+> The human genome is about 3,100 Mb long and has about 20,000
+> protein-coding genes. Calculate its gene density in genes per 100 kb
+> and compare it with yeast. What does this tell you about the human
+> genome?
+
+```{r}
+human <- 20000 / 3100e6 * 100000
+human
+54.3 / human   # how many times denser yeast is
+```
+
+**Answer.** About 0.65 genes per 100 kb, roughly 80 times lower than
+yeast (54). Only ~1–2% of the human genome codes for protein; the rest
+is large introns, long intergenic regions with regulatory elements, and
+repeats (transposons). Yeast has a compact genome with few, short
+introns.
+
+# Finish: knit
+
+> Which files would you give a classmate so they can repeat your work
+> from scratch? Which files do they *not* need, because they can recreate
+> them?
+
+**Answer.** Needed: `rresearch_notebook.Rmd` (all code and text) and a
+description of the software (SeqKit 2.9.0 in the Conda environment, R
+and package versions from `sessionInfo()`, ideally an exported
+`environment.yml`). The data can be downloaded again with the commands
+in the notebook (give them the data too if the download link might
+change). Not needed: everything in `results/` and the knitted HTML -
+the notebook recreates them.
+
+# Homework
+
+**1. The ten longest genes.**
+
+```{r}
+longest <- genes %>%
+  arrange(desc(length_bp)) %>%
+  slice_head(n = 10)
+longest
+write_tsv(longest, "results/longest_genes.tsv")
+count(longest, chromosome, sort = TRUE)
+```
+
+They are on XII (3 genes), II and IV (2 each), and XI, VIII and XV. The
+longest is YLR106C (MDN1, 14,733 bp), followed by YKR054C (DYN1, the
+dynein heavy chain). No pattern by chromosome: long genes are spread
+over the genome.
+
+**2. Overlapping gene pairs.**
+
+```{r}
+overlaps <- neighbours %>% filter(gap_bp < 0)
+count(overlaps, orientation)
+
+p_overlap <- ggplot(overlaps, aes(x = orientation)) +
+  geom_bar(fill = "steelblue") +
+  labs(x = NULL, y = "Number of overlapping pairs") +
+  theme_minimal()
+p_overlap
+ggsave("results/overlaps.png", p_overlap, width = 6, height = 5)
+
+# Largest overlaps, with both genes of the pair
+overlaps %>%
+  arrange(gap_bp) %>%
+  select(left_neighbour, record_id, chromosome, gap_bp, orientation) %>%
+  head(10)
+```
+
+Divergent pairs overlap most often (302), then convergent (229), then
+tandem (115). On SGD, most overlapping genes turn out to be poorly
+characterised: many are *dubious ORFs* or small ORFs (names ending in
+`-A`/`-B`, e.g. YNL339W-B, YIL177W-A in subtelomeric regions), or
+intron-encoded ORFs in the mitochondrial genome. The point of the
+exercise: annotation includes uncertain genes, and overlaps often
+indicate them.
+
+**3. Paragraph (example).** Yeast genes are densely packed, about 54
+genes per 100 kb on all nuclear chromosomes, so gene number grows in
+proportion to chromosome length; the mitochondrial genome is less
+dense. Genes are spread evenly over both strands. Gaps between
+neighbours are short (typically 200–300 bp): convergent pairs, which
+share only terminators, have the shortest gaps, while divergent and
+tandem pairs, whose gaps contain promoters, have longer ones. About 10%
+of neighbouring pairs overlap, mostly on opposite strands. The human
+genome is ~80 times less dense, with most DNA non-coding. A pattern in a
+plot shows an association, not its cause: other variables (e.g.
+centromeres, repeats, annotation quality, how genes were predicted) can
+produce the same pattern, and testing a cause needs an experiment or a
+model that rules out alternatives.
+
+```{r}
+sessionInfo()
+```

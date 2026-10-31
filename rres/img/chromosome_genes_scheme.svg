@@ -1,0 +1,34 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='900' height='220' viewBox='0 0 900 220'>
+<defs>
+<marker id='ar' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='7' markerHeight='7' orient='auto-start-reverse'>
+<path d='M0,0 L10,5 L0,10 z' fill='#555555'/></marker>
+<marker id='ark' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='6' markerHeight='6' orient='auto-start-reverse'>
+<path d='M0,0 L10,5 L0,10 z' fill='black'/></marker>
+<pattern id='hatch' width='6' height='6' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
+<rect width='6' height='6' fill='white' fill-opacity='0'/><line x1='0' y1='0' x2='0' y2='6' stroke='#C0392B' stroke-width='2'/></pattern>
+</defs>
+<rect width='900' height='220' fill='white'/>
+<text x='30' y='34' font-size='18' text-anchor='start' font-weight='bold' fill='#222' font-family='Helvetica, Arial, sans-serif' >Counting genes on a chromosome</text>
+<rect x='40' y='115' width='600' height='10' rx='5' fill='#BBBBBB'/>
+<polygon points='55,82.0 95,82.0 105,94 95,106.0 55,106.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<polygon points='120,82.0 175,82.0 185,94 175,106.0 120,106.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<polygon points='200,134.0 160,134.0 150,146 160,158.0 200,158.0' fill='#E08A2C' stroke='white' stroke-width='1.5'/>
+<polygon points='250,134.0 225,134.0 215,146 225,158.0 250,158.0' fill='#E08A2C' stroke='white' stroke-width='1.5'/>
+<polygon points='265,82.0 320,82.0 330,94 320,106.0 265,106.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<polygon points='345,82.0 375,82.0 385,94 375,106.0 345,106.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<polygon points='455,134.0 410,134.0 400,146 410,158.0 455,158.0' fill='#E08A2C' stroke='white' stroke-width='1.5'/>
+<polygon points='470,82.0 510,82.0 520,94 510,106.0 470,106.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<polygon points='575,134.0 540,134.0 530,146 540,158.0 575,158.0' fill='#E08A2C' stroke='white' stroke-width='1.5'/>
+<polygon points='585,82.0 620,82.0 630,94 620,106.0 585,106.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<text x='32' y='98' font-size='18' text-anchor='end' font-weight='bold' fill='#3B75AF' font-family='Helvetica, Arial, sans-serif' >+</text>
+<text x='32' y='152' font-size='18' text-anchor='end' font-weight='bold' fill='#E08A2C' font-family='Helvetica, Arial, sans-serif' >−</text>
+<path d='M40,176 L40,182 L640,182 L640,176' fill='none' stroke='#555555' stroke-width='1.5'/>
+<text x='340.0' y='202' font-size='14' text-anchor='middle' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >chromosome_bp (from the genome file)</text>
+<rect x='670' y='62' width='210' height='118' rx='8' fill='#EEEEEE'/>
+<text x='682' y='88' font-size='15' text-anchor='start' font-weight='bold' fill='#222' font-family='Helvetica, Arial, sans-serif' >genes = 10</text>
+<text x='682' y='106' font-size='12' text-anchor='start' font-weight='normal' fill='#555555' font-family='DejaVu Sans Mono, Menlo, Consolas, monospace' >count(genes, chromosome)</text>
+<text x='682' y='138' font-size='15' text-anchor='start' font-weight='bold' fill='#222' font-family='Helvetica, Arial, sans-serif' >genes per 100 kb =</text>
+<text x='682' y='158' font-size='12' text-anchor='start' font-weight='normal' fill='#555555' font-family='DejaVu Sans Mono, Menlo, Consolas, monospace' >genes / chromosome_bp</text>
+<text x='682' y='173' font-size='12' text-anchor='start' font-weight='normal' fill='#555555' font-family='DejaVu Sans Mono, Menlo, Consolas, monospace' >  * 100000</text>
+
+</svg>

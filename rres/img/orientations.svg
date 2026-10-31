@@ -1,0 +1,42 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='900' height='350' viewBox='0 0 900 350'>
+<defs>
+<marker id='ar' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='7' markerHeight='7' orient='auto-start-reverse'>
+<path d='M0,0 L10,5 L0,10 z' fill='#555555'/></marker>
+<marker id='ark' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='6' markerHeight='6' orient='auto-start-reverse'>
+<path d='M0,0 L10,5 L0,10 z' fill='black'/></marker>
+<pattern id='hatch' width='6' height='6' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
+<rect width='6' height='6' fill='white' fill-opacity='0'/><line x1='0' y1='0' x2='0' y2='6' stroke='#C0392B' stroke-width='2'/></pattern>
+</defs>
+<rect width='900' height='350' fill='white'/>
+<text x='30' y='34' font-size='18' text-anchor='start' font-weight='bold' fill='#222' font-family='Helvetica, Arial, sans-serif' >How two neighbouring genes can face each other</text>
+<text x='500' y='64' font-size='13' text-anchor='middle' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >strand (left, right)</text>
+<text x='30' y='115' font-size='16' text-anchor='start' font-weight='bold' fill='#222' font-family='Helvetica, Arial, sans-serif' >tandem</text>
+<line x1='150' y1='110' x2='420' y2='110' stroke='#BBBBBB' stroke-width='2'  />
+<polygon points='150,97.0 247,97.0 260,110 247,123.0 150,123.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<polygon points='310,97.0 407,97.0 420,110 407,123.0 310,123.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<rect x='260' y='90' width='50' height='40' fill='#FFF3C4' fill-opacity='0.8'/>
+<path d='M310,97 L310,75 L326,75' fill='none' stroke='black' stroke-width='2' marker-end='url(#ark)'/>
+<text x='500' y='115' font-size='14' text-anchor='middle' font-weight='normal' fill='#222' font-family='DejaVu Sans Mono, Menlo, Consolas, monospace' >(1, 1) or (−1, −1)</text>
+<text x='600' y='115' font-size='14' text-anchor='start' font-weight='normal' fill='#222' font-family='Helvetica, Arial, sans-serif' >one promoter in the gap</text>
+<text x='30' y='185' font-size='16' text-anchor='start' font-weight='bold' fill='#222' font-family='Helvetica, Arial, sans-serif' >divergent</text>
+<line x1='150' y1='180' x2='420' y2='180' stroke='#BBBBBB' stroke-width='2'  />
+<polygon points='260,167.0 163,167.0 150,180 163,193.0 260,193.0' fill='#E08A2C' stroke='white' stroke-width='1.5'/>
+<polygon points='310,167.0 407,167.0 420,180 407,193.0 310,193.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<rect x='260' y='160' width='50' height='40' fill='#FFF3C4' fill-opacity='0.8'/>
+<path d='M310,167 L310,145 L326,145' fill='none' stroke='black' stroke-width='2' marker-end='url(#ark)'/>
+<path d='M260,167 L260,145 L244,145' fill='none' stroke='black' stroke-width='2' marker-end='url(#ark)'/>
+<text x='500' y='185' font-size='14' text-anchor='middle' font-weight='normal' fill='#222' font-family='DejaVu Sans Mono, Menlo, Consolas, monospace' >(−1, 1)</text>
+<text x='600' y='185' font-size='14' text-anchor='start' font-weight='normal' fill='#222' font-family='Helvetica, Arial, sans-serif' >two promoters in the gap</text>
+<text x='30' y='255' font-size='16' text-anchor='start' font-weight='bold' fill='#222' font-family='Helvetica, Arial, sans-serif' >convergent</text>
+<line x1='150' y1='250' x2='420' y2='250' stroke='#BBBBBB' stroke-width='2'  />
+<polygon points='150,237.0 247,237.0 260,250 247,263.0 150,263.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<polygon points='420,237.0 323,237.0 310,250 323,263.0 420,263.0' fill='#E08A2C' stroke='white' stroke-width='1.5'/>
+<rect x='260' y='230' width='50' height='40' fill='#FFF3C4' fill-opacity='0.8'/>
+<text x='500' y='255' font-size='14' text-anchor='middle' font-weight='normal' fill='#222' font-family='DejaVu Sans Mono, Menlo, Consolas, monospace' >(1, −1)</text>
+<text x='600' y='255' font-size='14' text-anchor='start' font-weight='normal' fill='#222' font-family='Helvetica, Arial, sans-serif' >two gene ends, no promoter</text>
+<rect x='140' y='318' width='22' height='14' fill='#FFF3C4'/>
+<text x='170' y='330' font-size='13' text-anchor='start' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >gap</text>
+<path d='M240,333 L240,319 L252,319' fill='none' stroke='black' stroke-width='2' marker-end='url(#ark)'/>
+<text x='262' y='330' font-size='13' text-anchor='start' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >promoter: where transcription starts</text>
+
+</svg>

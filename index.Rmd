@@ -32,7 +32,7 @@ work, run bioinformatics analyses and explain your results in reproducible repor
 
 Organise your analysis and combine code, results and explanations in a notebook.
 
-[Open the tutorial](rres/rresearch.html)
+[Open the tutorial](rres/rresearch_tutorial.html)
 
 ## Sequencing technologies
 

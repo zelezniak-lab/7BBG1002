@@ -1,0 +1,41 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='900' height='300' viewBox='0 0 900 300'>
+<defs>
+<marker id='ar' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='7' markerHeight='7' orient='auto-start-reverse'>
+<path d='M0,0 L10,5 L0,10 z' fill='#555555'/></marker>
+<marker id='ark' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='6' markerHeight='6' orient='auto-start-reverse'>
+<path d='M0,0 L10,5 L0,10 z' fill='black'/></marker>
+<pattern id='hatch' width='6' height='6' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'>
+<rect width='6' height='6' fill='white' fill-opacity='0'/><line x1='0' y1='0' x2='0' y2='6' stroke='#C0392B' stroke-width='2'/></pattern>
+</defs>
+<rect width='900' height='300' fill='white'/>
+<text x='30' y='34' font-size='18' text-anchor='start' font-weight='bold' fill='#222' font-family='Helvetica, Arial, sans-serif' >Two strands, gaps between genes, and overlaps</text>
+<line x1='200' y1='110' x2='860' y2='110' stroke='#BBBBBB' stroke-width='3'  />
+<text x='170' y='115' font-size='14' text-anchor='end' font-weight='bold' fill='#3B75AF' font-family='Helvetica, Arial, sans-serif' >+ strand (1)</text>
+<text x='186' y='115' font-size='13' text-anchor='middle' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >5'</text>
+<text x='874' y='115' font-size='13' text-anchor='middle' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >3'</text>
+<line x1='200' y1='175' x2='860' y2='175' stroke='#BBBBBB' stroke-width='3'  />
+<text x='170' y='180' font-size='14' text-anchor='end' font-weight='bold' fill='#E08A2C' font-family='Helvetica, Arial, sans-serif' >− strand (−1)</text>
+<text x='186' y='180' font-size='13' text-anchor='middle' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >3'</text>
+<text x='874' y='180' font-size='13' text-anchor='middle' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >5'</text>
+<rect x='770' y='86' width='50' height='113' fill='url(#hatch)' stroke='#C0392B' stroke-dasharray='4,3'/>
+<polygon points='220,96.0 366,96.0 380,110 366,124.0 220,124.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<text x='296.0' y='115' font-size='15' text-anchor='middle' font-weight='bold' fill='white' font-family='Helvetica, Arial, sans-serif' >A</text>
+<polygon points='470,96.0 596,96.0 610,110 596,124.0 470,124.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<text x='536.0' y='115' font-size='15' text-anchor='middle' font-weight='bold' fill='white' font-family='Helvetica, Arial, sans-serif' >B</text>
+<polygon points='680,96.0 806,96.0 820,110 806,124.0 680,124.0' fill='#3B75AF' stroke='white' stroke-width='1.5'/>
+<text x='746.0' y='115' font-size='15' text-anchor='middle' font-weight='bold' fill='white' font-family='Helvetica, Arial, sans-serif' >C</text>
+<polygon points='855,161.0 784,161.0 770,175 784,189.0 855,189.0' fill='#E08A2C' stroke='white' stroke-width='1.5'/>
+<text x='816.5' y='180' font-size='15' text-anchor='middle' font-weight='bold' fill='white' font-family='Helvetica, Arial, sans-serif' >D</text>
+<line x1='380' y1='88' x2='380' y2='134' stroke='#555555' stroke-width='1'  stroke-dasharray='3,3'/>
+<line x1='470' y1='88' x2='470' y2='134' stroke='#555555' stroke-width='1'  stroke-dasharray='3,3'/>
+<path d='M380,92 L380,86 L470,86 L470,92' fill='none' stroke='#555555' stroke-width='1.5'/>
+<text x='425.0' y='76' font-size='14' text-anchor='middle' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >gap</text>
+<text x='380' y='150' font-size='12' text-anchor='middle' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >end of A</text>
+<text x='470' y='150' font-size='12' text-anchor='middle' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >start of B</text>
+<text x='795' y='78' font-size='14' text-anchor='middle' font-weight='bold' fill='#C0392B' font-family='Helvetica, Arial, sans-serif' >overlap</text>
+<rect x='200' y='215' width='660' height='70' rx='8' fill='#EEEEEE'/>
+<text x='214' y='240' font-size='15' text-anchor='start' font-weight='bold' fill='#222' font-family='Helvetica, Arial, sans-serif' >gap_bp = start of B − end of A − 1</text>
+<text x='214' y='262' font-size='14' text-anchor='start' font-weight='normal' fill='#222' font-family='Helvetica, Arial, sans-serif' >gap_bp &lt; 0: the genes overlap (C and D, on opposite strands).</text>
+<text x='214' y='279' font-size='13' text-anchor='start' font-weight='normal' fill='#555555' font-family='Helvetica, Arial, sans-serif' >start is always the left end and end the right end, also for genes on the − strand.</text>
+
+</svg>

@@ -1,0 +1,226 @@
+---
+title: "7BBG1002: Working Remotely and Reproducibly, yeast sequence notebook"
+author: Aleksej Zelezniak
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+---
+
+# Learning Outcomes
+
+- Develop reproducible computational procedures using R notebooks.
+- Work with Conda environments.
+- Run sequence processing software via command-line interfaces.
+- Analyse and plot the results in R.
+
+---
+
+## ⚠️ IMPORTANT NOTICE
+> **PLEASE READ THE TEXT AND INSTRUCTIONS CAREFULLY — DO NOT JUST BLINDLY COPY-PASTE COMMANDS.**
+> Each command has a purpose. Understanding *why* you are running it is part of learning reproducible research.
+
+---
+
+# Initial setup: Work environment and data
+
+The starter notebook contains the instructions below for setting up
+your project and Conda environment. You download it in the first steps
+and then work in it: copy the code from this page into the notebook and
+write your answers there. The full tutorial is on the
+**[course page](https://zelezniak-lab.github.io/7BBG1002/rres/rresearch_tutorial.html)**.
+The notebook will serve as both a simple pipeline and a final
+(reproducible) report.
+
+You will use **two jobs** on CREATE:
+
+1. a **terminal** on a compute node (`srun`) to set up the project
+   folder, the data and Conda;
+2. **RStudio** (`sbatch`) to work in the notebook.
+
+You can run at most **2 jobs at the same time**, so these two are all
+you need. Stop them when you have finished (see the end of the
+course page).
+
+## Log in to CREATE
+
+Open a terminal on your laptop: **Terminal** on macOS/Linux,
+**PowerShell** on Windows. Connect to CREATE with `ssh`, using your own
+k-number:
+
+```{bash, eval=FALSE}
+ssh k1234567@hpc.create.kcl.ac.uk
+```
+
+## Terminal on a compute node
+
+You are now on a **login node** (the prompt shows `erc-hpc-login...`).
+Login nodes are only for submitting jobs, and Conda is not available
+there. Move to a compute node by running interactive job with `srun`:
+
+```{bash, eval=FALSE}
+srun -p msc_appbio --mem=4G --time=02:00:00 --pty bash -l
+```
+
+The prompt changes from `erc-hpc-login...` to a compute node name.
+Run all commands in this section in this terminal. If `srun` just
+waits and nothing happens, see Troubleshooting on the course page.
+
+## Directory and data setup
+
+**Create a project folder and fetch the starter notebook**
+
+```{bash, eval=FALSE}
+mkdir yeast_project
+cd yeast_project
+wget https://raw.githubusercontent.com/zelezniak-lab/7BBG1002/refs/heads/main/rres/rresearch_notebook.Rmd
+```
+
+Now fetch the data we will be using, both from Ensembl release 113 for
+the yeast *Saccharomyces cerevisiae*: the coding sequences (CDS) of all
+protein-coding genes, and the genome (all chromosomes):
+
+```{bash, eval=FALSE}
+mkdir data results
+wget -O data/yeast_cds.fa.gz https://ftp.ensembl.org/pub/release-113/fasta/saccharomyces_cerevisiae/cds/Saccharomyces_cerevisiae.R64-1-1.cds.all.fa.gz
+wget -O data/yeast_genome.fa.gz https://ftp.ensembl.org/pub/release-113/fasta/saccharomyces_cerevisiae/dna/Saccharomyces_cerevisiae.R64-1-1.dna.toplevel.fa.gz
+ls -l data
+```
+
+To make sure this data is protected from accidental writes, remove the
+write permission (`-w`) for everyone (`ugo`):
+
+```{bash, eval=FALSE}
+chmod ugo-w data/*.fa.gz
+```
+
+## Work environment
+
+It's standard practice to create a new conda environment for each project.
+This is because each project may require a number of different software packages,
+with certain version. Even if these requirements are very similar between the projects,
+even small differences may topple the house of cards that is the software ecosystem.
+This is officially referred to as ["dependency hell"](https://en.wikipedia.org/wiki/Dependency_hell)
+and can be traumatizing.
+
+**Load Conda.** Software on CREATE comes as **modules**. Load the
+Conda module, then connect Conda to your shell so that
+`conda activate` works:
+
+```{bash, eval=FALSE}
+module load anaconda3/2025.12-2
+eval "$(conda shell.bash hook)"
+conda --version
+```
+
+Your prompt now starts with `(base)`. You need these two lines again in
+every new terminal. Do **not** run `conda init`, even if an error
+message suggests it.
+
+**Accept the Anaconda terms of service.** You only do this once:
+
+```{bash, eval=FALSE}
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+```
+
+Conda can fetch packages from many different sources (aka "channels").
+Let's add the Bioconda channel, as well as the general-purpose conda-forge:
+
+```{bash, eval=FALSE}
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
+
+Create a new environment for this exercise. The `conda create` command
+creates new environments, the option `--name` specifies the name of your
+new environment and the option `-y` lets conda know that you answer yes
+to all prompts.
+
+```{bash, eval=FALSE}
+conda create --name yeast-tools -y
+```
+
+Now activate it. Your prompt changes to `(yeast-tools)`:
+
+```{bash, eval=FALSE}
+conda activate yeast-tools
+```
+
+If that doesn't work, please ask for help so we make sure we all start
+from the same place.
+
+Now install the software needed for this exercise, SeqKit, into the
+active environment. We pin the version (`=2.9.0`) so that anyone
+repeating the work gets the same one:
+
+```{bash, eval=FALSE}
+conda install seqkit=2.9.0 -y
+```
+
+Let's inspect the packages that we just installed:
+
+```{bash, eval=FALSE}
+conda list
+```
+
+Save the software you installed, so anyone can rebuild the same
+environment with `conda env create -f environment.yml`:
+
+```{bash, eval=FALSE}
+conda env export --from-history > environment.yml
+cat environment.yml
+```
+
+## Start RStudio
+
+Now start RStudio with `sbatch`, following
+**[these instructions](https://zelezniak-lab.github.io/7BBG1002/create/rstudio_create.html)**.
+
+In RStudio, make the folder an **RStudio Project**: **File → New
+Project → Existing Directory**, choose `yeast_project`, and click
+**Create Project**. R now works inside this folder, so all paths in
+this notebook are short and relative (`data/...`, `results/...`).
+**Don't use `setwd()`**: a path like `/users/k1234567/...` works only
+for you. Next time, open the project with **File → Open Project**.
+
+Open `rresearch_notebook.Rmd` from the Files pane and continue there.
+From now on, run the code chunks in the notebook (green arrow).
+
+**Tell the notebook where SeqKit is.** Conda installed the environment
+in `~/.conda/envs/yeast-tools`, and its programs are in the `bin`
+folder there. The chunk below loads the `tidyverse`
+package and adds that folder to `PATH`, so every `bash` chunk can find
+`seqkit` without loading Conda again. Run it now, and again whenever
+you restart R:
+
+```{r setup}
+library(tidyverse)
+Sys.setenv(PATH = paste(path.expand("~/.conda/envs/yeast-tools/bin"),
+                        Sys.getenv("PATH"), sep = ":"))
+```
+
+## Troubleshooting: you need another terminal, but you already have 2 jobs
+
+Open a terminal on the node where your RStudio job runs instead of
+starting a new job. On the login node, find the RStudio job number
+(the `JOBID` column) and join that job:
+
+```{bash, eval=FALSE}
+squeue -u $USER
+srun --jobid=12345678 --overlap --pty bash -l    # use your RStudio job number
+```
+
+This does not count as a new job. It shares the CPUs, memory and time
+limit of your RStudio job, so use it only for light work (looking at
+files, short commands): if together they use more memory than the job
+has, the RStudio job can be stopped. The **Terminal** tab in RStudio is
+on the same node too.
+
+# Exercises
+
+Continue with Exercise 1 on the course page. Copy each code chunk below
+this line, run it, and write your answers here.
+
