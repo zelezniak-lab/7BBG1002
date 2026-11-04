@@ -60,7 +60,7 @@ Open a terminal on your laptop: **Terminal** on macOS/Linux,
 k-number:
 
 ```{bash, eval=FALSE}
-ssh k1234567@hpc.create.kcl.ac.uk
+ssh -i .ssh/id_ed25519-create k1234567@hpc.create.kcl.ac.uk
 ```
 
 ## Terminal on a compute node
